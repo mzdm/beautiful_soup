@@ -261,7 +261,7 @@ packages:
     source: hosted
     version: "0.10.10"
   source_span:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: source_span
       url: "https://pub.dartlang.org"

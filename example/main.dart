@@ -24,7 +24,10 @@ void main() {
   BeautifulSoup bs = BeautifulSoup(html_doc); // use BeautifulSoup.fragment(html_doc_string) if you parse a part of html
 
   // 2. navigate quickly to any element
-  bs.body!.a!; // get String representation of this element, same as outerHtml, finds: "<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>"
+  bs.body!.a!.toString(); // get String representation of this element, same as outerHtml, finds: "<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>"
+  bs.find('p', attrs: {'class': 'story'}); // finds first element with html tag "p" and which has "class" attribute with value "story"
+  bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
+
   Bs4Element bs4 = bs.body!.p!; // quickly with tags, finds and navigates to: "<p class="title"><b>The Dormouse's story</b></p>"
 
   // 3. perform any other actions for the navigated element

@@ -19,6 +19,9 @@ BeautifulSoup bs = BeautifulSoup(html_doc_string);
 
 /// 2. navigate quickly to any element
 bs.body!.a!; // get String representation of this element, same as outerHtml
+bs.find('p', attrs: {'class': 'story'}); // finds first element with html tag "p" and which has "class" attribute with value "story"
+bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
+
 Bs4Element bs4 = bs.body!.p!; // quickly with tags
 
 /// 3. perform any other actions for the navigated element
@@ -33,6 +36,8 @@ bs4.children; // get all element's children elements
 bs4.replaceWith(otherBs4Element); // replace with other element
 ... and many more
 ```
+
+Check `test` folder for more examples.
 
 ## Table of Contents
 
