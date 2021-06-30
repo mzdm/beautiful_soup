@@ -1,9 +1,9 @@
-import 'package:beautiful_soup/src/bs4_element.dart';
-import 'package:beautiful_soup/src/impl/impl.dart';
-import 'package:beautiful_soup/src/tags.dart';
 import 'package:html/dom.dart';
 
+import 'bs4_element.dart';
 import 'extensions.dart';
+import 'impl/impl.dart';
+import 'tags.dart';
 
 class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   @override

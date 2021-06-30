@@ -1,5 +1,5 @@
-import 'package:beautiful_soup/beautiful_soup.dart';
-import 'package:beautiful_soup/src/helpers.dart';
+import 'package:beautiful_soup_dart/beautiful_soup.dart';
+import 'package:beautiful_soup_dart/src/helpers.dart';
 import 'package:html/parser.dart';
 import 'package:test/test.dart';
 

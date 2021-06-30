@@ -1,13 +1,13 @@
 // ignore_for_file: implementation_imports
 import 'dart:collection';
 
-import 'package:beautiful_soup/src/shared.dart';
 import 'package:html/dom.dart';
 import 'package:source_span/src/file.dart';
 
 import 'extensions.dart';
 import 'helpers.dart';
 import 'impl/impl.dart';
+import 'shared.dart';
 
 class Bs4Element extends Shared
     implements ElementImpl, TreeNavigatorImpl, TreeModifierImpl {

@@ -1,5 +1,6 @@
-import 'package:beautiful_soup/src/shared.dart';
 import 'package:html/parser.dart';
+
+import 'shared.dart';
 
 /// {@template bs_soup}
 /// Beautiful Soup is a library for pulling data out of HTML files.

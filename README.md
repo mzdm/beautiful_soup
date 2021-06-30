@@ -1,6 +1,6 @@
 # Beautiful Soup
 
-[![pub package](https://img.shields.io/pub/v/beautiful_soup.svg)](https://pub.dev/packages/beautiful_soup)
+[![pub package](https://img.shields.io/pub/v/beautiful_soup_dart.svg)](https://pub.dev/packages/beautiful_soup_dart)
 ![tests](https://github.com/mzdm/beautiful_soup/actions/workflows/main.yml/badge.svg)
 
 [comment]: <> ([![codecov]&#40;https://codecov.io/gh/mzdm/beautiful_soup/branch/master/graph/badge.svg&#41;]&#40;https://codecov.io/gh/mzdm/beautiful_soup&#41;)
@@ -13,6 +13,8 @@ modifying the HTML tree.
 A simple usage example:
 
 ```dart
+import 'package:beautiful_soup_dart/beautiful_soup.dart';
+
 /// 1. parse a document String
 BeautifulSoup bs = BeautifulSoup(html_doc_string);
 // use BeautifulSoup.fragment(html_doc_string) if you parse a part of html

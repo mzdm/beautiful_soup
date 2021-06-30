@@ -1,4 +1,4 @@
-import 'package:beautiful_soup/beautiful_soup.dart';
+import '../bs4_element.dart';
 
 abstract class TreeModifierImpl {
   /// {@macro bs4element_string}
