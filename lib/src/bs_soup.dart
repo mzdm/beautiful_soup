@@ -7,7 +7,7 @@ import 'shared.dart';
 /// It provides ways of navigating, searching, and modifying the parse tree.
 /// It commonly saves programmers hours or days of work.
 ///
-/// How it should be used?
+/// How it should be used? 3 easy steps.
 ///
 /// **1.** parse a document
 ///
@@ -23,7 +23,7 @@ import 'shared.dart';
 /// Bs4Element bs4 = bs.find('p', attrs: {'class': 'story'}); // with query func
 /// ```
 ///
-/// **3.** perform any other actions
+/// **3.** perform any actions
 ///
 /// ```
 /// bs4.name; // get tag name

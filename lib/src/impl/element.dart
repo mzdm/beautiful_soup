@@ -6,8 +6,9 @@ import 'package:source_span/src/file.dart';
 
 import '../bs4_element.dart';
 
+/// Most of the implementation comes from [`html` Dart package](https://pub.dev/packages/html).
 abstract class ElementImpl {
-  /// Returns the **tag name** (local name) of the element.
+  /// Returns the **tag name** of the element.
   ///
   /// Same as [element.localName].
   String? get name;
@@ -19,6 +20,7 @@ abstract class ElementImpl {
   String get outerHtml;
 
   /// Returns a fragment of HTML or XML that represents the element's contents.
+  ///
   /// Can be set, to replace the contents of the element with nodes parsed from
   /// the given string.
   ///
@@ -27,16 +29,29 @@ abstract class ElementImpl {
 
   set innerHtml(String value);
 
+  /// Returns the value of the `class` attribute.
+  ///
+  /// Can be set.
+  ///
   /// [DOM Element - className](http://dom.spec.whatwg.org/#dom-element-classname)
   String get className;
 
   set className(String value);
 
+  /// Returns the value of the `id` attribute.
+  ///
+  /// Can be set.
+  ///
   /// [DOM Element - id](http://dom.spec.whatwg.org/#dom-element-id)
   String get id;
 
   set id(String value);
 
+  /// Returns a [LinkedHashMap] of the element's attributes.
+  ///
+  /// Where `key` is an attribute name and value is the `value` of an attribute.
+  ///
+  /// Can be set.
   LinkedHashMap<Object, String> get attributes;
 
   set attributes(LinkedHashMap<Object, String> _attributes);
@@ -85,6 +100,10 @@ abstract class ElementImpl {
 
   int get _nodeType;
 
+  /// Returns the list of [Node]s.
+  ///
+  /// Can be used to iterate not only elements, but also doc comments. strings
+  /// and etc.
   NodeList get nodes;
 
   Node? get _firstChild;
