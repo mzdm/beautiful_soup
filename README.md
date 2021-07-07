@@ -5,7 +5,7 @@
 
 [comment]: <> ([![codecov]&#40;https://codecov.io/gh/mzdm/beautiful_soup/branch/master/graph/badge.svg&#41;]&#40;https://codecov.io/gh/mzdm/beautiful_soup&#41;)
 
-Dart native package inspired by Beautiful Soup Python library. Provides easy ways of navigating, searching, and
+Dart native package inspired by Beautiful Soup 4 Python library. Provides easy ways of navigating, searching, and
 modifying the HTML tree.
 
 ## Usage
@@ -45,22 +45,24 @@ Check `test` folder for more examples.
 
 The unlinked titles are not yet implemented.
 
-- Navigating the tree
+- [Navigating the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigating-the-tree)
     - [Going down](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#going-down)
         - [Navigating using tag names](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigating-using-tag-names)
         - [.contents and .children](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#contents-and-children)
         - [.descendants](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#descendants)
         - [.string](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#string)
-        - [.strings and .stripped_strings](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#strings-and-stripped-strings)
+        - [.strings and .strippedStrings](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#strings-and-stripped-strings)
     - [Going up](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#going-up)
         - [.parent](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#parent)
         - [.parents](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#parents)
     - [Going sideways](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#going-sideways)
         - [.nextSibling and .previousSibling](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#next-sibling-and-previous-sibling)
         - [.nextSiblings and .previousSiblings](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#next-siblings-and-previous-siblings)
-    - Going back and forth
-        - .nextElement and .previousElement
-        - .nextElements and .previousElements
+    - [Going back and forth](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#going-back-and-forth)
+        - [.nextElement and .previousElement]() - returns next/previous Bs4Element
+        - [.nextElements and .previousElements]()
+        - [.nextParsed and .previousParsed]() - returns next/previous any parsed (doc comments, tags, text)
+        - .nextParsedAll and .previousParsedAll
 - Searching the tree
     - [findFirstAny()]() - returns the top most (first) element of the parse tree, of any tag type
     - [findAll()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all)
@@ -81,7 +83,7 @@ The unlinked titles are not yet implemented.
     - clear()
     - [extract()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#extract)
     - decompose()
-    - [replace_with()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#replace-with)
+    - [replaceWith()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#replace-with)
     - wrap()
     - unwrap()
     - smooth()

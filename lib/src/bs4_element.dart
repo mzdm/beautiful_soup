@@ -264,4 +264,235 @@ class Bs4Element extends Shared
 
   @override
   String toString() => outerHtml;
+
+  @override
+  Bs4Element? get nextElement {
+    // find within children
+    final children = this.children;
+    if (children.isNotEmpty) {
+      return children.first;
+    }
+
+    // find within next sibling
+    final nextSibling = this.nextSibling;
+    if (nextSibling != null) {
+      return nextSibling;
+    }
+
+    // within within parent and next siblings
+    var parent = this.parent;
+    while (parent != null) {
+      if (parent.nextSibling == null) {
+        parent = parent.parent;
+      } else {
+        return parent.nextSibling;
+      }
+    }
+
+    return null;
+  }
+
+  @override
+  List<Bs4Element> get nextElements {
+    final nextElements = <Bs4Element>[];
+
+    // find within children
+    nextElements.addAll(descendants);
+
+    // find within next siblings
+    nextElements.addAll(nextSiblings);
+
+    // within within parent and next siblings
+    var parent = this.parent;
+    while (parent != null) {
+      nextElements.addAll(parent.nextSiblings);
+      parent = parent.parent;
+    }
+
+    return nextElements;
+  }
+
+  @override
+  Bs4Element? get previousElement {
+    // find within next sibling
+    final previousSibling = this.previousSibling;
+    if (previousSibling != null) {
+      return previousSibling;
+    }
+
+    // within within parent, or null
+    return parent;
+  }
+
+  @override
+  List<Bs4Element> get previousElements {
+    final previousElements = <Bs4Element>[];
+
+    // find within previous siblings
+    previousElements.addAll(previousSiblings);
+
+    // within within parent and previous siblings
+    var parent = this.parent;
+    while (parent != null) {
+      previousElements
+        ..add(parent)
+        ..addAll(parent.previousSiblings);
+
+      parent = parent.parent;
+    }
+
+    return previousElements;
+  }
+
+  @override
+  String? get nextParsed {
+    final element = this.element;
+    if (element == null) return null;
+
+    // find within children
+    if (element.hasChildNodes()) {
+      return _getDataFromNode(element.nodes.first);
+    }
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return null;
+
+    // find within next siblings
+    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
+    final allSiblings = parentNode.nodes;
+    if (nextIndex < allSiblings.length) {
+      return _getDataFromNode(allSiblings[nextIndex]);
+    }
+
+    // find within parent and next siblings
+    Node prevNode = parentNode;
+    Node? parent = parentNode.parentNode;
+    while (parent != null) {
+      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
+      final allSiblings = parent.nodes;
+
+      if (nextIndex < allSiblings.length) {
+        return _getDataFromNode(allSiblings[nextIndex]);
+      }
+
+      prevNode = parent;
+      parent = parent.parentNode;
+    }
+
+    return null;
+  }
+
+  @override
+  List<String> get nextParsedAll {
+    final nextParsedAll = <String>[];
+
+    final element = this.element;
+    if (element == null) return nextParsedAll;
+
+    // find within children
+    if (element.hasChildNodes()) {
+      final descendants = element.nodes
+          .map((node) => recursiveNodeSearch(node))
+          .expand((e) => e)
+          .toList();
+      nextParsedAll.addAll(descendants.map((node) => _getDataFromNode(node)));
+    }
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return nextParsedAll;
+
+    // find within next siblings
+    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
+    final allSiblings = parentNode.nodes;
+    if (nextIndex < allSiblings.length) {
+      final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
+      nextParsedAll.addAll(rangeList.map((node) => _getDataFromNode(node)));
+    }
+
+    // find within parent and next siblings
+    Node prevNode = parentNode;
+    Node? parent = parentNode.parentNode;
+    while (parent != null) {
+      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
+      final allSiblings = parent.nodes;
+
+      if (nextIndex < allSiblings.length) {
+        final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
+        nextParsedAll.addAll(rangeList.map((node) => _getDataFromNode(node)));
+      }
+
+      prevNode = parent;
+      parent = parent.parentNode;
+    }
+
+    return nextParsedAll;
+  }
+
+  @override
+  String? get _previousParsed {
+    // find within next sibling
+    final previousSibling = this.previousSibling;
+    if (previousSibling != null) {
+      // return previousSibling;
+    }
+
+    // within within parent, or null
+    // return parent;
+    return '';
+  }
+
+  @override
+  List<String> get _previousParsedAll {
+    final str = <String>[];
+    final previousElements = <Bs4Element>[];
+
+    // find within previous siblings
+    previousElements.addAll(previousSiblings);
+
+    // within within parent and previous siblings
+    var parent = this.parent;
+    while (parent != null) {
+      previousElements
+        ..add(parent)
+        ..addAll(parent.previousSiblings);
+
+      parent = parent.parent;
+    }
+
+    return str;
+  }
+}
+
+String _getDataFromNode(Node node) {
+  switch (node.nodeType) {
+    case Node.ELEMENT_NODE:
+      return (node as Element).outerHtml;
+    case Node.ATTRIBUTE_NODE:
+      return node.toString();
+    case Node.TEXT_NODE:
+      return (node as Text).text;
+    case Node.CDATA_SECTION_NODE:
+    case Node.ENTITY_REFERENCE_NODE:
+    case Node.ENTITY_NODE:
+    case Node.PROCESSING_INSTRUCTION_NODE:
+      return node.toString();
+    case Node.COMMENT_NODE:
+      return '<!--${(node as Comment).data}-->';
+    case Node.DOCUMENT_NODE:
+      return (node as Document).outerHtml;
+    case Node.DOCUMENT_TYPE_NODE:
+      return (node as DocumentType).toString();
+    case Node.DOCUMENT_FRAGMENT_NODE:
+      return (node as DocumentFragment).outerHtml;
+    case Node.NOTATION_NODE:
+      return node.toString();
+    default:
+      return node.toString();
+  }
+}
+
+int _getCurrNodeIndex(Node parentNode, Node currentNode) {
+  final allSiblings = parentNode.nodes;
+  final nextIndex = allSiblings.indexOf(currentNode);
+  return nextIndex;
 }

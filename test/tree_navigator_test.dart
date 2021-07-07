@@ -88,7 +88,7 @@ void main() {
       });
 
       test("does not find text", () {
-        bs = BeautifulSoup(html_prettify2);
+        bs = BeautifulSoup(html_prettify);
         final bs4 = bs.head;
         expect(bs4, isNotNull);
         expect(bs4!.string, equals(''));
@@ -117,7 +117,7 @@ void main() {
       });
 
       test("does not find text", () {
-        bs = BeautifulSoup(html_prettify2);
+        bs = BeautifulSoup(html_prettify);
         final bs4 = bs.head;
         expect(bs4, isNotNull);
         expect(bs4!.strippedStrings, equals(''));
@@ -209,7 +209,7 @@ void main() {
       });
     });
 
-    group('nextSibling', () {
+    group('previousElement', () {
       test("finds element's next sibling", () {
         final bs4 = bs.p;
         expect(bs4, isNotNull);
@@ -251,6 +251,242 @@ void main() {
         final bs4 = bs.body;
         expect(bs4, isNotNull);
         expect(bs4!.nextSiblings, isEmpty);
+      });
+    });
+
+    group('nextParsedAll', () {
+      test("finds next element, within children", () {
+        final bs4 = bs.body!.find('p', attrs: {'class': 'story'});
+        expect(bs4, isNotNull);
+
+        final nextElement = bs4!.nextElement;
+        expect(nextElement, isNotNull);
+        expect(
+          nextElement.toString(),
+          equals(
+              '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>'),
+        );
+      });
+
+      test("finds next element, within next sibling", () {
+        final bs4 = bs.body!.find('a', attrs: {'id': 'link3'});
+        expect(bs4, isNotNull);
+
+        final nextElement = bs4!.nextElement;
+        expect(nextElement, isNotNull);
+        expect(
+          nextElement.toString(),
+          equals('<a href="unknown">Some name</a>'),
+        );
+      });
+
+      test("finds next element, within parent next sibling", () {
+        final bs4 = bs.body!.p!.find('b');
+        expect(bs4, isNotNull);
+
+        final nextElement = bs4!.nextElement;
+        expect(nextElement, isNotNull);
+        expect(nextElement!.name, equals('p'));
+        expect(nextElement['class'], equals('story'));
+      });
+
+      test("does not find next element (bottom most element)", () {
+        final bs4 = bs.findAll('p', attrs: {'class': 'story'}).last;
+        expect(bs4.toString(), equals('<p class="story">...</p>'));
+
+        final nextElement = bs4.nextElement;
+        expect(nextElement, isNull);
+      });
+    });
+
+    group('nextElements', () {
+      test("finds next elements, within children and next siblings", () {
+        final bs4 = bs.body!.find('p', attrs: {'class': 'story'});
+        expect(bs4, isNotNull);
+
+        final nextElements = bs4!.nextElements;
+        expect(nextElements, isNotEmpty);
+        expect(nextElements.length, 5);
+        expect(
+          nextElements.map((e) => e.name),
+          equals(<String>['a', 'a', 'a', 'a', 'p']),
+        );
+      });
+
+      test("finds next elements, within parent and next siblings", () {
+        final bs4 = bs.body!.p!.find('b');
+        expect(bs4, isNotNull);
+
+        final nextElements = bs4!.nextElements;
+        expect(nextElements, isNotEmpty);
+        expect(nextElements.length, 2);
+        expect(nextElements.map((e) => e.name), equals(<String>['p', 'p']));
+        expect(nextElements[0].string, startsWith('Once upon a time'));
+        expect(nextElements[1].string, equals('...'));
+      });
+
+      test("does not find next elements", () {
+        final bs4 = bs.findAll('p', attrs: {'class': 'story'}).last;
+        expect(bs4, isNotNull);
+
+        final nextElements = bs4.nextElements;
+        expect(nextElements, isEmpty);
+      });
+    });
+
+    group('previousElement', () {
+      test("finds previous element, within previous sibling", () {
+        final bs4 = bs.body!.find('p', attrs: {'class': 'story'});
+        expect(bs4, isNotNull);
+
+        final previousElement = bs4!.previousElement;
+        expect(previousElement, isNotNull);
+        expect(
+          previousElement.toString(),
+          equals("<p class=\"title\"><b>The Dormouse's story</b></p>"),
+        );
+      });
+
+      test("finds previous element, within parent", () {
+        final bs4 = bs.body!.p!.find('b');
+        expect(bs4, isNotNull);
+
+        final previousElement = bs4!.previousElement;
+        expect(previousElement, isNotNull);
+        expect(
+          previousElement.toString(),
+          equals("<p class=\"title\"><b>The Dormouse's story</b></p>"),
+        );
+      });
+
+      test("does not find previous element (top most element)", () {
+        final bs4 = bs.html;
+        expect(bs4, isNotNull);
+
+        final previousElement = bs4!.previousElement;
+        expect(previousElement, isNull);
+      });
+    });
+
+    group('previousElements', () {
+      test("finds previous elements, within previous siblings and parent", () {
+        final bs4 = bs.body!.find('p', attrs: {'class': 'story'});
+        expect(bs4, isNotNull);
+
+        final previousElements = bs4!.previousElements;
+        expect(previousElements, isNotEmpty);
+        expect(previousElements.length, 4);
+        expect(
+          previousElements.map((e) => e.name),
+          equals(<String>['p', 'body', 'head', 'html']),
+        );
+      });
+
+      test("finds previous elements, within parent", () {
+        final bs4 = bs.head!.title;
+        expect(bs4, isNotNull);
+
+        final previousElements = bs4!.previousElements;
+        expect(previousElements, isNotEmpty);
+        expect(previousElements.length, 2);
+        expect(
+          previousElements.map((e) => e.name),
+          equals(<String>['head', 'html']),
+        );
+      });
+
+      test("does not find previous elements", () {
+        final bs4 = bs.html;
+        expect(bs4, isNotNull);
+
+        final previousElements = bs4!.previousElements;
+        expect(previousElements, isEmpty);
+      });
+    });
+
+    group('nextParsedAll', () {
+      setUp(() {
+        bs = BeautifulSoup.fragment(html_comment);
+      });
+
+      test("finds next parsed element, within parent", () {
+        final bs4 = bs.find('br');
+        expect(bs4, isNotNull);
+
+        final nextParsed = bs4!.nextParsed;
+        expect(nextParsed, isNotNull);
+        expect(nextParsed, equals('<tag></tag>'));
+      });
+
+      test("finds next parsed text, within children", () {
+        final bs4 = bs.find('c');
+        expect(bs4, isNotNull);
+
+        final nextParsed = bs4!.nextParsed;
+        expect(nextParsed, isNotNull);
+        expect(nextParsed.toString(), equals('text2'));
+      });
+
+      test("finds next parsed comment, within next siblings", () {
+        final bs4 = bs.find('b');
+        expect(bs4, isNotNull);
+
+        final nextParsed = bs4!.nextParsed;
+        expect(nextParsed, isNotNull);
+        expect(nextParsed.toString(), equals('<!-- some comment -->'));
+      });
+
+      test("does not find next parsed (bottom most element)", () {
+        bs = BeautifulSoup.fragment(html_placeholder_empty);
+        final bs4 = bs.a;
+        expect(bs4, isNotNull);
+
+        final nextParsed = bs4!.nextParsed;
+        expect(nextParsed, isNull);
+      });
+    });
+
+    group('nextParsedAll', () {
+      setUp(() {
+        bs = BeautifulSoup.fragment(html_comment);
+      });
+
+      test(
+          "finds all next parsed elements, within children, "
+          "parent and next sibling", () {
+        final bs4 = bs.find('b');
+        expect(bs4, isNotNull);
+
+        final nextParsedAll = bs4!.nextParsedAll;
+        expect(nextParsedAll, isNotEmpty);
+        expect(nextParsedAll.length, 7);
+        expect(nextParsedAll[0], equals('<!-- some comment -->'));
+        expect(nextParsedAll[1], equals('<c>text2</c>'));
+        expect(nextParsedAll[2], startsWith('\n'));
+        expect(nextParsedAll[3], equals('<br>'));
+        expect(nextParsedAll[4], equals('<tag></tag>'));
+        expect(nextParsedAll[5], startsWith('\n'));
+        expect(nextParsedAll[6], startsWith('\n'));
+      });
+    });
+
+    group('previousParsed', () {
+      test("finds ___", () {
+        //
+      });
+
+      test("does not ___", () {
+        //
+      });
+    });
+
+    group('previousParsedAll', () {
+      test("finds ___", () {
+        //
+      });
+
+      test("does not ___", () {
+        //
       });
     });
   });

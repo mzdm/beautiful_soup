@@ -25,10 +25,14 @@ const html_placeholder_empty = "<a></a>";
 
 const html_plain_text = "text";
 
-const html_prettify = """
-"<a><b>text1</b><c>text2</c></b></a>"
+const html_comment = """
+<x>
+<a>
+  <b></b><!-- some comment --><c>text2</c>
+  <br></a><tag></tag>
+</x>
 """;
 
-const html_prettify2 = """
+const html_prettify = """
 <html><head><body><a href="http://example.com/">I linked to <i>example.com</i></a></body></html>
 """;

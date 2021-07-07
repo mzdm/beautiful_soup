@@ -51,30 +51,56 @@ abstract class TreeNavigatorImpl {
   List<Bs4Element> get nextSiblings;
 
   /// {@template tree_navigator_nextElement}
-  /// The [nextElement] is a string or tag that was parsed
-  /// immediately afterwards.
+  /// The [nextElement] is an element that was parsed immediately afterwards
+  /// (firstly searches next elements of [children], if empty then
+  /// [nextSiblings]).
   ///
-  /// It might be the same as [nextSibling], except it returns String and not
-  /// [Bs4Element] and it’s usually drastically different.
+  /// Use [nextParsed] if you want to get any type
+  /// (doc comment, part of string, ...).
   /// {@endtemplate}
-  Bs4Element? get _nextElement;
+  Bs4Element? get nextElement;
 
   /// {@macro tree_navigator_nextElement}
   ///
-  /// Returns a list of [_nextElement]s.
-  List<String> get _nextElements;
+  /// Returns a list of [nextElement]s.
+  List<Bs4Element> get nextElements;
 
   /// {@template tree_navigator_previousElement}
-  /// The [previousElement] is a string or tag that was parsed
-  /// immediately before the current element.
+  /// The [previousElement] is an element that was parsed
+  /// immediately before the current element
+  /// (firstly searches [previousSiblings], if empty then [parent]).
   ///
-  /// It might be the same as [previousSibling], except it returns String
-  /// and not [Bs4Element] and it’s usually drastically different.
+  /// Use [_previousParsed] if you want to get any type
+  /// (doc comment, part of string, ...).
   /// {@endtemplate}
-  Bs4Element? get _previousElement;
+  Bs4Element? get previousElement;
 
   /// {@macro tree_navigator_previousElement}
   ///
-  /// Returns a list of [_previousElement]s.
-  List<Bs4Element> get _previousElements;
+  /// Returns a list of [previousElement]s.
+  List<Bs4Element> get previousElements;
+
+  /// {@template tree_navigator_nextParsed}
+  /// Similar to [nextElement] but it returns a [String] of what was parsed
+  /// immediately after the current element. It might be doc comment, element,
+  /// part of string, etc...
+  /// {@endtemplate}
+  String? get nextParsed;
+
+  /// {@macro tree_navigator_nextParsed}
+  ///
+  /// Returns a list of [nextParsed]s.
+  List<String> get nextParsedAll;
+
+  /// {@template tree_navigator_previousParsed}
+  /// Similar to [previousElement] but it returns a [String] of what was parsed
+  /// immediately before the current element. It might be doc comment, element,
+  /// part of string, etc...
+  /// {@endtemplate}
+  String? get _previousParsed;
+
+  /// {@macro tree_navigator_previousParsed}
+  ///
+  /// Returns a list of [_previousParsed]s.
+  List<String> get _previousParsedAll;
 }
