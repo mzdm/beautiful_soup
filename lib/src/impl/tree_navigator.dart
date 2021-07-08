@@ -1,3 +1,5 @@
+import 'package:html/dom.dart';
+
 import '../bs4_element.dart';
 
 /// Contains methods from [Navigating the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigating-the-tree).
@@ -70,7 +72,7 @@ abstract class TreeNavigatorImpl {
   /// immediately before the current element
   /// (firstly searches [previousSiblings], if empty then [parent]).
   ///
-  /// Use [_previousParsed] if you want to get any type
+  /// Use [previousParsed] if you want to get any type
   /// (doc comment, part of string, ...).
   /// {@endtemplate}
   Bs4Element? get previousElement;
@@ -81,26 +83,32 @@ abstract class TreeNavigatorImpl {
   List<Bs4Element> get previousElements;
 
   /// {@template tree_navigator_nextParsed}
-  /// Similar to [nextElement] but it returns a [String] of what was parsed
+  /// Similar to [nextElement] but it returns a [Node] of what was parsed
   /// immediately after the current element. It might be doc comment, element,
   /// part of string, etc...
+  ///
+  /// To get the [String] (data) representation of this [Node], use
+  /// `node.data`.
   /// {@endtemplate}
-  String? get nextParsed;
+  Node? get nextParsed;
 
   /// {@macro tree_navigator_nextParsed}
   ///
   /// Returns a list of [nextParsed]s.
-  List<String> get nextParsedAll;
+  List<Node> get nextParsedAll;
 
   /// {@template tree_navigator_previousParsed}
-  /// Similar to [previousElement] but it returns a [String] of what was parsed
+  /// Similar to [previousElement] but it returns a [Node] of what was parsed
   /// immediately before the current element. It might be doc comment, element,
   /// part of string, etc...
+  ///
+  /// To get the [String] (data) representation of this [Node], use
+  /// `node.data`.
   /// {@endtemplate}
-  String? get _previousParsed;
+  Node? get previousParsed;
 
   /// {@macro tree_navigator_previousParsed}
   ///
-  /// Returns a list of [_previousParsed]s.
-  List<String> get _previousParsedAll;
+  /// Returns a list of [previousParsed]s.
+  List<Node> get previousParsedAll;
 }

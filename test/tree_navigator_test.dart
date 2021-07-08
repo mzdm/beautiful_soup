@@ -1,4 +1,5 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
+import 'package:html/dom.dart';
 import 'package:test/test.dart';
 
 import 'fixtures/fixtures.dart';
@@ -209,7 +210,7 @@ void main() {
       });
     });
 
-    group('previousElement', () {
+    group('nextSibling', () {
       test("finds element's next sibling", () {
         final bs4 = bs.p;
         expect(bs4, isNotNull);
@@ -254,7 +255,7 @@ void main() {
       });
     });
 
-    group('nextParsedAll', () {
+    group('nextElement', () {
       test("finds next element, within children", () {
         final bs4 = bs.body!.find('p', attrs: {'class': 'story'});
         expect(bs4, isNotNull);
@@ -404,7 +405,7 @@ void main() {
       });
     });
 
-    group('nextParsedAll', () {
+    group('nextParsed', () {
       setUp(() {
         bs = BeautifulSoup.fragment(html_comment);
       });
@@ -415,7 +416,8 @@ void main() {
 
         final nextParsed = bs4!.nextParsed;
         expect(nextParsed, isNotNull);
-        expect(nextParsed, equals('<tag></tag>'));
+        expect(nextParsed!.data, equals('<tag></tag>'));
+        expect(nextParsed.nodeType, Node.ELEMENT_NODE);
       });
 
       test("finds next parsed text, within children", () {
@@ -424,7 +426,8 @@ void main() {
 
         final nextParsed = bs4!.nextParsed;
         expect(nextParsed, isNotNull);
-        expect(nextParsed.toString(), equals('text2'));
+        expect(nextParsed!.data, equals('text2'));
+        expect(nextParsed.nodeType, Node.TEXT_NODE);
       });
 
       test("finds next parsed comment, within next siblings", () {
@@ -433,7 +436,8 @@ void main() {
 
         final nextParsed = bs4!.nextParsed;
         expect(nextParsed, isNotNull);
-        expect(nextParsed.toString(), equals('<!-- some comment -->'));
+        expect(nextParsed!.data, equals('<!-- some comment -->'));
+        expect(nextParsed.nodeType, Node.COMMENT_NODE);
       });
 
       test("does not find next parsed (bottom most element)", () {
@@ -446,7 +450,7 @@ void main() {
       });
     });
 
-    group('nextParsedAll', () {
+    group('prevParsedAll', () {
       setUp(() {
         bs = BeautifulSoup.fragment(html_comment);
       });
@@ -460,33 +464,102 @@ void main() {
         final nextParsedAll = bs4!.nextParsedAll;
         expect(nextParsedAll, isNotEmpty);
         expect(nextParsedAll.length, 7);
-        expect(nextParsedAll[0], equals('<!-- some comment -->'));
-        expect(nextParsedAll[1], equals('<c>text2</c>'));
-        expect(nextParsedAll[2], startsWith('\n'));
-        expect(nextParsedAll[3], equals('<br>'));
-        expect(nextParsedAll[4], equals('<tag></tag>'));
-        expect(nextParsedAll[5], startsWith('\n'));
-        expect(nextParsedAll[6], startsWith('\n'));
+
+        expect(nextParsedAll[0].data, equals('<!-- some comment -->'));
+        expect(nextParsedAll[0].nodeType, Node.COMMENT_NODE);
+
+        expect(nextParsedAll[1].data, equals('<c>text2</c>'));
+        expect(nextParsedAll[1].nodeType, Node.ELEMENT_NODE);
+
+        expect(nextParsedAll[2].data, startsWith('\n'));
+        expect(nextParsedAll[2].nodeType, Node.TEXT_NODE);
+
+        expect(nextParsedAll[3].data, equals('<br>'));
+        expect(nextParsedAll[3].nodeType, Node.ELEMENT_NODE);
+
+        expect(nextParsedAll[4].data, equals('<tag></tag>'));
+        expect(nextParsedAll[4].nodeType, Node.ELEMENT_NODE);
+
+        expect(nextParsedAll[5].data, startsWith('\n'));
+        expect(nextParsedAll[5].nodeType, Node.TEXT_NODE);
+
+        expect(nextParsedAll[6].data, startsWith('\n'));
+        expect(nextParsedAll[6].nodeType, Node.TEXT_NODE);
       });
     });
 
     group('previousParsed', () {
-      test("finds ___", () {
-        //
+      setUp(() {
+        bs = BeautifulSoup.fragment(html_comment);
       });
 
-      test("does not ___", () {
-        //
+      test("finds prev parsed element, within prev siblings", () {
+        final bs4 = bs.find('c');
+        expect(bs4, isNotNull);
+
+        final prevParsed = bs4!.previousParsed;
+        expect(prevParsed, isNotNull);
+        expect(prevParsed!.data, equals('<!-- some comment -->'));
+        expect(prevParsed.nodeType, Node.COMMENT_NODE);
+      });
+
+      test("finds prev parsed element, within parent", () {
+        bs = BeautifulSoup(html_prettify);
+        final bs4 = bs.head;
+        expect(bs4, isNotNull);
+
+        final prevParsed = bs4!.previousParsed;
+        expect(prevParsed, isNotNull);
+        expect(prevParsed!.data, startsWith('<html>'));
+        expect(prevParsed.nodeType, Node.DOCUMENT_NODE);
+      });
+
+      test("does not find prev parsed (top most element)", () {
+        final bs4 = bs.find('x');
+        expect(bs4, isNotNull);
+
+        final prevParsed = bs4!.previousParsed;
+        expect(prevParsed, isNull);
       });
     });
 
     group('previousParsedAll', () {
-      test("finds ___", () {
-        //
+      setUp(() {
+        bs = BeautifulSoup.fragment(html_comment);
       });
 
-      test("does not ___", () {
-        //
+      test(
+          "finds all prev parsed elements, within children, "
+          "parent and prev sibling", () {
+        final bs4 = bs.find('c');
+        expect(bs4, isNotNull);
+
+        final prevParsedAll = bs4!.previousParsedAll;
+        expect(prevParsedAll, isNotEmpty);
+        expect(prevParsedAll.length, 5);
+
+        expect(prevParsedAll[0].data, equals('<!-- some comment -->'));
+        expect(prevParsedAll[0].nodeType, Node.COMMENT_NODE);
+
+        expect(prevParsedAll[1].data, equals('<b></b>'));
+        expect(prevParsedAll[1].nodeType, Node.ELEMENT_NODE);
+
+        expect(prevParsedAll[2].data, startsWith('\n'));
+        expect(prevParsedAll[2].nodeType, Node.TEXT_NODE);
+
+        expect(prevParsedAll[3].data, startsWith('\n'));
+        expect(prevParsedAll[3].nodeType, Node.TEXT_NODE);
+
+        expect(prevParsedAll[4].data, startsWith('<x>'));
+        expect(prevParsedAll[4].nodeType, Node.ELEMENT_NODE);
+      });
+
+      test("does not find prev parsed (top most element)", () {
+        final bs4 = bs.find('x');
+        expect(bs4, isNotNull);
+
+        final prevParsed = bs4!.previousParsedAll;
+        expect(prevParsed.length, 0);
       });
     });
   });

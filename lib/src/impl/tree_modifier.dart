@@ -1,3 +1,5 @@
+import 'package:html/dom.dart';
+
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
@@ -6,6 +8,9 @@ abstract class TreeModifierImpl {
   set string(String? value);
 
   /// Adds an element just before the closing tags of the current element.
+  ///
+  /// If you want to pass [Node] instead [Bs4Element], you can do it via
+  /// `bs4element.element.append(node)`.
   void append(Bs4Element element);
 
   /// Adds elements just before the closing tags of the current element,
@@ -15,12 +20,16 @@ abstract class TreeModifierImpl {
   /// Creates a whole new tag.
   void _newTag();
 
-  /// It is just like [_append], except the new element does not necessarily
+  /// It is just like [append], except the new element does not necessarily
   /// go at the end of its parent’s .[contents]. It’ll be inserted at
   /// whatever numeric position you say, just after the opening tag of the
   /// current element.
   ///
   /// If the position is out of range, throws [RangeError].
+  ///
+  ///
+  /// If you want to pass [Node] instead [Bs4Element], you can do it via
+  /// `bs4element.element.insert(index, node)`.
   void insert(int position, Bs4Element element);
 
   /// Inserts an element immediately before the current element in
@@ -30,6 +39,9 @@ abstract class TreeModifierImpl {
   /// apply.
   ///
   /// If the [ref] is not in the parse tree, throws [RangeError].
+  ///
+  /// If you want to pass [Node] instead [Bs4Element], you can do it via
+  /// `bs4element.element.insertBefore(node, nodeRef)`.
   void insertBefore(Bs4Element element, [Bs4Element? ref]);
 
   /// Inserts an element immediately following the element in the parse tree.
@@ -56,6 +68,10 @@ abstract class TreeModifierImpl {
   /// Removes an element from the tree, and replaces it with [otherElement].
   ///
   /// Returns the element that was replaced.
+  ///
+  ///
+  /// If you want to pass [Node] instead [Bs4Element], you can do it via
+  /// `bs4element.element.replaceWith(node)`.
   Bs4Element replaceWith(Bs4Element otherElement);
 
   /// Wraps an element in the tag you specify. It returns the new wrapper.

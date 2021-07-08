@@ -21,6 +21,7 @@ import 'shared.dart';
 /// ```
 /// Bs4Element bs4 = bs.body.p; // quickly with tags
 /// Bs4Element bs4 = bs.find('p', attrs: {'class': 'story'}); // with query func
+/// Bs4Element bs4 = bs.find('', customSelector: '#link1'); // find with custom CSS selector (other parameters are ignored)
 /// ```
 ///
 /// **3.** perform any actions

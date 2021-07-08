@@ -125,9 +125,228 @@ class Bs4Element extends Shared
   }
 
   @override
-  void append(Bs4Element element) {
-    _element.append(element._element);
+  Bs4Element? get nextElement {
+    // find within children
+    final children = this.children;
+    if (children.isNotEmpty) {
+      return children.first;
+    }
+
+    // find within next sibling
+    final nextSibling = this.nextSibling;
+    if (nextSibling != null) {
+      return nextSibling;
+    }
+
+    // find within parent and next siblings
+    var parent = this.parent;
+    while (parent != null) {
+      if (parent.nextSibling == null) {
+        parent = parent.parent;
+      } else {
+        return parent.nextSibling;
+      }
+    }
+
+    return null;
   }
+
+  @override
+  List<Bs4Element> get nextElements {
+    final nextElements = <Bs4Element>[];
+
+    // find within children
+    nextElements.addAll(descendants);
+
+    // find within next siblings
+    nextElements.addAll(nextSiblings);
+
+    // find within parent and next siblings
+    var parent = this.parent;
+    while (parent != null) {
+      nextElements.addAll(parent.nextSiblings);
+      parent = parent.parent;
+    }
+
+    return nextElements;
+  }
+
+  @override
+  Bs4Element? get previousElement {
+    // find within prev sibling
+    final prevSibling = previousSibling;
+    if (prevSibling != null) {
+      return prevSibling;
+    }
+
+    // find within parent, or null
+    return parent;
+  }
+
+  @override
+  List<Bs4Element> get previousElements {
+    final prevElements = <Bs4Element>[];
+
+    // find within prev siblings
+    prevElements.addAll(previousSiblings);
+
+    // find within parent and prev siblings
+    var parent = this.parent;
+    while (parent != null) {
+      prevElements
+        ..add(parent)
+        ..addAll(parent.previousSiblings);
+
+      parent = parent.parent;
+    }
+
+    return prevElements;
+  }
+
+  @override
+  Node? get nextParsed {
+    final element = this.element;
+    if (element == null) return null;
+
+    // find within children
+    if (element.hasChildNodes()) {
+      return element.nodes.first;
+    }
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return null;
+
+    // find within next siblings
+    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
+    final allSiblings = parentNode.nodes;
+    if (nextIndex < allSiblings.length) {
+      return allSiblings[nextIndex];
+    }
+
+    // find within parent and next siblings
+    Node prevNode = parentNode;
+    Node? parent = parentNode.parentNode;
+    while (parent != null) {
+      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
+      final allSiblings = parent.nodes;
+
+      if (nextIndex < allSiblings.length) {
+        return allSiblings[nextIndex];
+      }
+
+      prevNode = parent;
+      parent = parent.parentNode;
+    }
+
+    return null;
+  }
+
+  @override
+  List<Node> get nextParsedAll {
+    final nextParsedAll = <Node>[];
+
+    final element = this.element;
+    if (element == null) return nextParsedAll;
+
+    // find within children
+    if (element.hasChildNodes()) {
+      final descendants = element.nodes
+          .map((node) => recursiveNodeSearch(node))
+          .expand((e) => e)
+          .toList();
+      nextParsedAll.addAll(descendants);
+    }
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return nextParsedAll;
+
+    // find within next siblings
+    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
+    final allSiblings = parentNode.nodes;
+    if (nextIndex < allSiblings.length) {
+      final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
+      nextParsedAll.addAll(rangeList);
+    }
+
+    // find within parent and next siblings
+    Node prevNode = parentNode;
+    Node? parent = parentNode.parentNode;
+    while (parent != null) {
+      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
+      final allSiblings = parent.nodes;
+
+      if (nextIndex < allSiblings.length) {
+        final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
+        nextParsedAll.addAll(rangeList);
+      }
+
+      prevNode = parent;
+      parent = parent.parentNode;
+    }
+
+    return nextParsedAll;
+  }
+
+  @override
+  Node? get previousParsed {
+    final element = this.element;
+    if (element == null) return null;
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return null;
+
+    // find within prev siblings
+    final prevIndex = _getCurrNodeIndex(parentNode, element) - 1;
+    final allSiblings = parentNode.nodes;
+    if (prevIndex >= 0) {
+      return allSiblings[prevIndex];
+    }
+
+    // find within parent or null
+    return parentNode.parentNode;
+  }
+
+  @override
+  List<Node> get previousParsedAll {
+    final prevParsedAll = <Node>[];
+
+    final element = this.element;
+    if (element == null) return prevParsedAll;
+
+    final parentNode = element.parentNode;
+    if (parentNode == null) return prevParsedAll;
+
+    // find within parent and prev siblings
+    final prevIndex = _getCurrNodeIndex(parentNode, element) - 1;
+    final allSiblings = parentNode.nodes;
+    if (prevIndex >= 0) {
+      final rangeList = allSiblings.getRange(0, prevIndex + 1);
+      prevParsedAll.addAll(List.of(rangeList).reversed);
+    }
+
+    Node prevNode = parentNode;
+    Node? parent = parentNode.parentNode;
+    while (parent != null) {
+      final prevIndex = _getCurrNodeIndex(parent, prevNode) - 1;
+      final allSiblings = parent.nodes;
+
+      if (prevIndex == -1) {
+        // top most element (?)
+        prevParsedAll.add(allSiblings.first);
+      } else if (prevIndex >= 0) {
+        final rangeList = allSiblings.getRange(0, prevIndex + 1);
+        prevParsedAll.addAll(List.of(rangeList).reversed);
+      }
+
+      prevNode = parent;
+      parent = parent.parentNode;
+    }
+
+    return prevParsedAll;
+  }
+
+  @override
+  void append(Bs4Element element) => _element.append(element._element);
 
   @override
   void extend(List<Bs4Element> element) {
@@ -176,20 +395,6 @@ class Bs4Element extends Shared
   Bs4Element replaceWith(Bs4Element otherElement) =>
       (_element.replaceWith(otherElement._element) as Element).bs4;
 
-  // @override
-  // Bs4Element? get nextElement {
-  //   final parentNode = this.parentNode;
-  //   if (parentNode == null) {
-  //     return null;
-  //   }
-  //   final nodeSiblings = parentNode.nodes;
-  //   for (var i = nodeSiblings.indexOf(_element) + 1; i < nodeSiblings.length; i++) {
-  //     final element = nodeSiblings[i];
-  //     return element;
-  //   }
-  //   return null;
-  // }
-
   @override
   LinkedHashMap<Object, String> get attributes => _element.attributes;
 
@@ -209,35 +414,7 @@ class Bs4Element extends Shared
   CssClassSet get _classes => _element.classes;
 
   @override
-  FileSpan? get _endSourceSpan => _element.endSourceSpan;
-
-  @override
-  set _endSourceSpan(FileSpan? _endSourceSpan) =>
-      _element.endSourceSpan = _endSourceSpan;
-
-  @override
-  Node? get _parentNode => _element.parentNode;
-
-  @override
-  set _parentNode(Node? _parentNode) => _element.parentNode = _parentNode;
-
-  @override
-  FileSpan? get _sourceSpan => _element.sourceSpan;
-
-  @override
-  set _sourceSpan(FileSpan? _sourceSpan) => _element.sourceSpan = _sourceSpan;
-
-  @override
-  String? get _namespaceUri => _element.namespaceUri;
-
-  @override
-  int get _nodeType => _element.nodeType;
-
-  @override
   NodeList get nodes => _element.nodes;
-
-  @override
-  Node? get _firstChild => _element.firstChild;
 
   @override
   void _reparentChildren(Node newParent) =>
@@ -253,9 +430,6 @@ class Bs4Element extends Shared
   bool _contains(Node node) => _element.contains(node);
 
   @override
-  bool _hasChildNodes() => _element.hasChildNodes();
-
-  @override
   String? operator [](String name) => _element.attributes[name];
 
   @override
@@ -264,231 +438,6 @@ class Bs4Element extends Shared
 
   @override
   String toString() => outerHtml;
-
-  @override
-  Bs4Element? get nextElement {
-    // find within children
-    final children = this.children;
-    if (children.isNotEmpty) {
-      return children.first;
-    }
-
-    // find within next sibling
-    final nextSibling = this.nextSibling;
-    if (nextSibling != null) {
-      return nextSibling;
-    }
-
-    // within within parent and next siblings
-    var parent = this.parent;
-    while (parent != null) {
-      if (parent.nextSibling == null) {
-        parent = parent.parent;
-      } else {
-        return parent.nextSibling;
-      }
-    }
-
-    return null;
-  }
-
-  @override
-  List<Bs4Element> get nextElements {
-    final nextElements = <Bs4Element>[];
-
-    // find within children
-    nextElements.addAll(descendants);
-
-    // find within next siblings
-    nextElements.addAll(nextSiblings);
-
-    // within within parent and next siblings
-    var parent = this.parent;
-    while (parent != null) {
-      nextElements.addAll(parent.nextSiblings);
-      parent = parent.parent;
-    }
-
-    return nextElements;
-  }
-
-  @override
-  Bs4Element? get previousElement {
-    // find within next sibling
-    final previousSibling = this.previousSibling;
-    if (previousSibling != null) {
-      return previousSibling;
-    }
-
-    // within within parent, or null
-    return parent;
-  }
-
-  @override
-  List<Bs4Element> get previousElements {
-    final previousElements = <Bs4Element>[];
-
-    // find within previous siblings
-    previousElements.addAll(previousSiblings);
-
-    // within within parent and previous siblings
-    var parent = this.parent;
-    while (parent != null) {
-      previousElements
-        ..add(parent)
-        ..addAll(parent.previousSiblings);
-
-      parent = parent.parent;
-    }
-
-    return previousElements;
-  }
-
-  @override
-  String? get nextParsed {
-    final element = this.element;
-    if (element == null) return null;
-
-    // find within children
-    if (element.hasChildNodes()) {
-      return _getDataFromNode(element.nodes.first);
-    }
-
-    final parentNode = element.parentNode;
-    if (parentNode == null) return null;
-
-    // find within next siblings
-    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
-    final allSiblings = parentNode.nodes;
-    if (nextIndex < allSiblings.length) {
-      return _getDataFromNode(allSiblings[nextIndex]);
-    }
-
-    // find within parent and next siblings
-    Node prevNode = parentNode;
-    Node? parent = parentNode.parentNode;
-    while (parent != null) {
-      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
-      final allSiblings = parent.nodes;
-
-      if (nextIndex < allSiblings.length) {
-        return _getDataFromNode(allSiblings[nextIndex]);
-      }
-
-      prevNode = parent;
-      parent = parent.parentNode;
-    }
-
-    return null;
-  }
-
-  @override
-  List<String> get nextParsedAll {
-    final nextParsedAll = <String>[];
-
-    final element = this.element;
-    if (element == null) return nextParsedAll;
-
-    // find within children
-    if (element.hasChildNodes()) {
-      final descendants = element.nodes
-          .map((node) => recursiveNodeSearch(node))
-          .expand((e) => e)
-          .toList();
-      nextParsedAll.addAll(descendants.map((node) => _getDataFromNode(node)));
-    }
-
-    final parentNode = element.parentNode;
-    if (parentNode == null) return nextParsedAll;
-
-    // find within next siblings
-    final nextIndex = _getCurrNodeIndex(parentNode, element) + 1;
-    final allSiblings = parentNode.nodes;
-    if (nextIndex < allSiblings.length) {
-      final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
-      nextParsedAll.addAll(rangeList.map((node) => _getDataFromNode(node)));
-    }
-
-    // find within parent and next siblings
-    Node prevNode = parentNode;
-    Node? parent = parentNode.parentNode;
-    while (parent != null) {
-      final nextIndex = _getCurrNodeIndex(parent, prevNode) + 1;
-      final allSiblings = parent.nodes;
-
-      if (nextIndex < allSiblings.length) {
-        final rangeList = allSiblings.getRange(nextIndex, allSiblings.length);
-        nextParsedAll.addAll(rangeList.map((node) => _getDataFromNode(node)));
-      }
-
-      prevNode = parent;
-      parent = parent.parentNode;
-    }
-
-    return nextParsedAll;
-  }
-
-  @override
-  String? get _previousParsed {
-    // find within next sibling
-    final previousSibling = this.previousSibling;
-    if (previousSibling != null) {
-      // return previousSibling;
-    }
-
-    // within within parent, or null
-    // return parent;
-    return '';
-  }
-
-  @override
-  List<String> get _previousParsedAll {
-    final str = <String>[];
-    final previousElements = <Bs4Element>[];
-
-    // find within previous siblings
-    previousElements.addAll(previousSiblings);
-
-    // within within parent and previous siblings
-    var parent = this.parent;
-    while (parent != null) {
-      previousElements
-        ..add(parent)
-        ..addAll(parent.previousSiblings);
-
-      parent = parent.parent;
-    }
-
-    return str;
-  }
-}
-
-String _getDataFromNode(Node node) {
-  switch (node.nodeType) {
-    case Node.ELEMENT_NODE:
-      return (node as Element).outerHtml;
-    case Node.ATTRIBUTE_NODE:
-      return node.toString();
-    case Node.TEXT_NODE:
-      return (node as Text).text;
-    case Node.CDATA_SECTION_NODE:
-    case Node.ENTITY_REFERENCE_NODE:
-    case Node.ENTITY_NODE:
-    case Node.PROCESSING_INSTRUCTION_NODE:
-      return node.toString();
-    case Node.COMMENT_NODE:
-      return '<!--${(node as Comment).data}-->';
-    case Node.DOCUMENT_NODE:
-      return (node as Document).outerHtml;
-    case Node.DOCUMENT_TYPE_NODE:
-      return (node as DocumentType).toString();
-    case Node.DOCUMENT_FRAGMENT_NODE:
-      return (node as DocumentFragment).outerHtml;
-    case Node.NOTATION_NODE:
-      return node.toString();
-    default:
-      return node.toString();
-  }
 }
 
 int _getCurrNodeIndex(Node parentNode, Node currentNode) {

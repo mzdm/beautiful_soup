@@ -84,29 +84,11 @@ abstract class ElementImpl {
   /// Copied from [Element].
   CssClassSet get _classes;
 
-  FileSpan? get _endSourceSpan;
-
-  set _endSourceSpan(FileSpan? _endSourceSpan);
-
-  Node? get _parentNode;
-
-  set _parentNode(Node? _parentNode);
-
-  FileSpan? get _sourceSpan;
-
-  set _sourceSpan(FileSpan? _sourceSpan);
-
-  String? get _namespaceUri;
-
-  int get _nodeType;
-
   /// Returns the list of [Node]s.
   ///
   /// Can be used to iterate not only elements, but also doc comments. strings
   /// and etc.
   NodeList get nodes;
-
-  Node? get _firstChild;
 
   /// Move all the children of the current node to [newParent].
   /// This is needed so that trees that don't store text as nodes move the
@@ -129,8 +111,6 @@ abstract class ElementImpl {
   bool _hasContent();
 
   bool _contains(Node node);
-
-  bool _hasChildNodes();
 
   /// Gets an attribute value by [name].
   String? operator [](String name);

@@ -23,6 +23,7 @@ BeautifulSoup bs = BeautifulSoup(html_doc_string);
 bs.body!.a!; // get String representation of this element, same as outerHtml
 bs.find('p', attrs: {'class': 'story'}); // finds first element with html tag "p" and which has "class" attribute with value "story"
 bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
+bs.find('', customSelector: '#link1'); // find with custom CSS selector (other parameters are ignored)
 
 Bs4Element bs4 = bs.body!.p!; // quickly with tags
 
@@ -61,17 +62,19 @@ The unlinked titles are not yet implemented.
     - [Going back and forth](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#going-back-and-forth)
         - [.nextElement and .previousElement]() - returns next/previous Bs4Element
         - [.nextElements and .previousElements]()
-        - [.nextParsed and .previousParsed]() - returns next/previous any parsed (doc comments, tags, text)
-        - .nextParsedAll and .previousParsedAll
-- Searching the tree
+        - [.nextParsed and .previousParsed]() - returns next/previous any parsed Node (doc comments, tags, text), to get its data as String use `node.data`
+        - [.nextParsedAll and .previousParsedAll]()
+- [Searching the tree]()
     - [findFirstAny()]() - returns the top most (first) element of the parse tree, of any tag type
     - [findAll()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all)
     - [find()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find)
-    - findParents() and findParent()
-    - findNextSiblings() and findNextSibling()
-    - findPreviousSiblings() and findPreviousSibling()
-    - findAllNext() and findNext()
-    - findAllPrevious() and findPrevious()
+    - [findParents() and findParent()]()
+    - [findNextSiblings() and findNextSibling()]()
+    - [findPreviousSiblings() and findPreviousSibling()]()
+    - [findAllNextElements() and findNextElement()]()
+    - [findAllPreviousElements() and findPreviousElement()]()
+    - [findNextParsedAll() and findNextParsed()]()
+    - [findPreviousParsedAll() and findPreviousParsed()]()
 - Modifying the tree
     - [Changing tag names and attributes](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#changing-tag-names-and-attributes)
     - [Modifying .string](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-string)
@@ -92,6 +95,8 @@ The unlinked titles are not yet implemented.
     - escape()
     - unescape()
     - [getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
+
+Other functions from the `Element` from `html package` can be accessed via `bs4element.element`.
 
 ## Features and bugs
 
