@@ -1,3 +1,5 @@
+import 'package:html/dom.dart';
+
 import '../bs4_element.dart';
 
 /// Contains methods from [Searching the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree).
@@ -16,8 +18,7 @@ abstract class TreeSearcherImpl {
   /// \- [attrs], for specifying the attributes of a tag, where **key** is
   /// **name of the attribute** and **value** is the **value of the attribute**
   /// (the only allowed types of the value are **String** or **bool**).
-  /// When you search for a tag that matches a certain CSS class,
-  /// you’re matching against any of its CSS classes.
+  /// Use `true` as value of an attribute to search for any attribute values.
   /// {@endtemplate}
   ///
   /// For example:
@@ -29,7 +30,7 @@ abstract class TreeSearcherImpl {
   ///
   /// {@template tree_searcher_find2}
   /// <br>
-  /// You can provide your own [selector](https://drafts.csswg.org/selectors-4/#overview)
+  /// You can provide your own CSS [selector](https://drafts.csswg.org/selectors-4/#overview)
   /// [customSelector], if it is specified then both [name] and [attrs]
   /// will be ignored. If such selector is not implemented this method
   /// will throw [UnimplementedError].
@@ -38,7 +39,7 @@ abstract class TreeSearcherImpl {
   /// {@endtemplate}
   List<Bs4Element> findAll(
     String name, {
-    Map<String, Object> attrs,
+    Map<String, Object>? attrs,
     String? customSelector,
   });
 
@@ -65,10 +66,26 @@ abstract class TreeSearcherImpl {
   /// These methods do the opposite: they work their way up the
   /// tree, looking at a tag’s parents.
   /// {@endtemplate}
-  Bs4Element? _findParent();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Bs4Element? findParent(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
   /// {@macro tree_searcher_findParent}
-  List<Bs4Element> _findParents();
+  ///
+  /// Returns a list of parents.
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Bs4Element> findParents(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
   /// {@template tree_searcher_findNextSibling}
   /// These methods use [nextSiblings] to iterate over the rest of an element’s
@@ -77,10 +94,24 @@ abstract class TreeSearcherImpl {
   /// The [findNextSiblings] method returns all the
   /// siblings that match, and [findNextSibling] only returns the first one.
   /// {@endtemplate}
-  Bs4Element? _findNextSibling();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Bs4Element? findNextSibling(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
   /// {@macro tree_searcher_findNextSibling}
-  List<Bs4Element> _findNextSiblings();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Bs4Element> findNextSiblings(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
   /// {@template tree_searcher_findPreviousSibling}
   /// These methods use [previousSiblings] to iterate over an element’s
@@ -90,32 +121,126 @@ abstract class TreeSearcherImpl {
   /// method returns all the siblings that match, and [findPreviousSibling]
   /// only returns the first one.
   /// {@endtemplate}
-  Bs4Element? _findPreviousSibling();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Bs4Element? findPreviousSibling(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
   /// {@macro tree_searcher_findPreviousSibling}
-  List<Bs4Element> _findPreviousSiblings();
-
-  /// {@template tree_searcher_findNext}
-  /// These methods use [nextElements] to iterate over whatever tags and
-  /// strings that come after it in the document.
   ///
-  /// The [findAllNext] method returns all matches, and [findNext]
-  /// only returns the first match.
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Bs4Element> findPreviousSiblings(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
+
+  /// {@template tree_searcher_findNextElement}
+  /// These methods use [nextElements] to iterate over elements
+  /// that come after it in the document.
+  ///
+  /// The [findAllNextElements] method returns all matches,
+  /// and [findNextElement] only returns the first match.
   /// {@endtemplate}
-  Bs4Element? _findNext();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Bs4Element? findNextElement(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
-  /// {@macro tree_searcher_findNext}
-  List<Bs4Element> _findAllNext();
+  /// {@macro tree_searcher_findNextElement}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Bs4Element> findAllNextElements(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
-  /// {@template tree_searcher_findPrevious}
+  /// {@template tree_searcher_findPreviousElement}
   /// These methods use [previousElements] to iterate over the tags and
   /// strings that came before it in the document.
   ///
-  /// The [findAllPrevious] method returns all matches, and [findPrevious]
-  /// only returns the first match.
+  /// The [findAllPreviousElements] method returns all matches,
+  /// and [findPreviousElement] only returns the first match.
   /// {@endtemplate}
-  Bs4Element? _findPrevious();
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Bs4Element? findPreviousElement(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 
-  /// {@macro tree_searcher_findPrevious}
-  List<Bs4Element> _findAllPrevious();
+  /// {@macro tree_searcher_findPreviousElement}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Bs4Element> findAllPreviousElements(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
+
+  /// {@template tree_searcher_findNextParsed}
+  /// These methods use [nextParsed] to iterate over the tags, comments,
+  /// strings, etc. that came after it in the document.
+  ///
+  /// The [findNextParsedAll] method returns all matches,
+  /// and [findNextParsed] only returns the first match.
+  /// {@endtemplate}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Node? findNextParsed(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
+
+  /// {@macro tree_searcher_findNextParsed}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Node> findNextParsedAll(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
+
+  /// {@template tree_searcher_findPreviousParsed}
+  /// These methods use [previousParsed] to iterate over the tags, comments,
+  /// strings, etc. that came before it in the document.
+  ///
+  /// The [findPreviousParsedAll] method returns all matches,
+  /// and [findPreviousParsed] only returns the first match.
+  /// {@endtemplate}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  Node? findPreviousParsed(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
+
+  /// {@macro tree_searcher_findPreviousParsed}
+  ///
+  /// {@macro tree_searcher_find}
+  /// {@macro tree_searcher_find2}
+  List<Node> findPreviousParsedAll(
+    String name, {
+    Map<String, Object>? attrs,
+    String? customSelector,
+  });
 }
