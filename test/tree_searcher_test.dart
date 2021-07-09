@@ -1,4 +1,5 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
+import 'package:html/dom.dart';
 import 'package:test/test.dart';
 
 import 'fixtures/fixtures.dart';
@@ -505,75 +506,145 @@ void main() {
     });
 
     group('findNextParsed', () {
-      // test('finds all with any tag', () {
-      //   final element = bs.a;
-      //   expect(element, isNotNull);
-      //
-      //   final prevSibling = element!.findParent('*');
-      //   expect(prevSibling!.name, equals('p'));
-      //   expect(prevSibling.children.length, 4);
-      // });
+      test('finds with defined pattern', () {
+        final element = bs.body;
+        expect(element, isNotNull);
 
-      // test('finds all with defined tag', () {
-      //   final element = bs.a;
-      //   expect(element, isNotNull);
-      //
-      //   final prevSibling = element!.findParent('body');
-      //   expect(prevSibling!.name, equals('body'));
-      //   expect(prevSibling.children.length, 3);
-      // });
+        final nextParsed =
+            element!.findNextParsed(pattern: RegExp('^(<a).*id="link'));
+        expect(nextParsed, isNotNull);
+        expect(
+          nextParsed!.data,
+          startsWith('<a href="http://example.com/elsie"'),
+        );
+        expect(nextParsed.nodeType, Node.ELEMENT_NODE);
+      });
 
-      // test('finds from BeautifulSoup instance', () {
-      //   final element = bs.findParent('*');
-      //   expect(element, isNotNull);
-      //   expect(element!.name, equals('_'));
-      // });
+      test('finds with defined pattern and nodeType (url link)', () {
+        bs = BeautifulSoup.fragment(html_prettify);
+        final nextParsed = bs.findNextParsed(
+          pattern: RegExp(r'.*(.com)'),
+          nodeType: Node.TEXT_NODE,
+        );
 
-      // test('does not find any', () {
-      //   final element = bs.findParent('*');
-      //   expect(element, isNull);
-      // });
+        expect(nextParsed, isNotNull);
+        expect(nextParsed!.data, equals('example.com'));
+        expect(nextParsed.nodeType, Node.TEXT_NODE);
+      });
+
+      test('does not find any', () {
+        bs = BeautifulSoup.fragment(html_placeholder_empty);
+        final element = bs.findNextParsed();
+        expect(element, isNull);
+      });
     });
 
     group('findNextParsedAll', () {
-      // test('finds all with any tag', () {
-      //   final element = bs.a;
-      //   expect(element, isNotNull);
-      //
-      //   final prevSibling = element!.findParents('*');
-      //   expect(prevSibling.length, 3);
-      //   expect(
-      //     prevSibling.map((e) => e.name),
-      //     equals(<String>['p', 'body', 'html']),
-      //   );
-      // });
+      test('finds all any', () {
+        final element = bs.findAll('p').last;
 
-      // test('finds all with defined tag', () {
-      //   final element = bs.a;
-      //   expect(element, isNotNull);
-      //
-      //   final prevSibling = element!.findParents('body');
-      //   expect(prevSibling.length, 1);
-      //   expect(prevSibling.map((e) => e.name), equals(<String>['body']));
-      // });
+        final nextParsedAll = element.findNextParsedAll();
+        expect(nextParsedAll.length, 2);
+        expect(nextParsedAll[0].data, startsWith('...'));
+        expect(nextParsedAll[1].data, startsWith('\n'));
+        expect(
+          nextParsedAll.map((e) => e.nodeType),
+          equals(<int>[Node.TEXT_NODE, Node.TEXT_NODE]),
+        );
+      });
 
-      // test('finds from BeautifulSoup instance', () {
-      //   final elements = bs.findParents('*');
-      //   expect(elements.isEmpty, isTrue);
-      // });
+      test('finds all with defined pattern', () {
+        final element = bs.html;
+        expect(element, isNotNull);
 
-      // test('does not find any', () {
-      //   final elements = bs.findParents('*');
-      //   expect(elements.isEmpty, isTrue);
-      // });
+        // find all elements that starts with: <p class="story"
+        final nextParsedAll =
+            element!.findNextParsedAll(pattern: RegExp(r'^(<p class="story")'));
+        expect(nextParsedAll.length, 2);
+        expect(
+          nextParsedAll[0].data,
+          startsWith('<p class="story">Once upon a'),
+        );
+        expect(
+          nextParsedAll[1].data,
+          equals('<p class="story">...</p>'),
+        );
+        expect(
+          nextParsedAll.map((e) => e.nodeType),
+          equals(<int>[Node.ELEMENT_NODE, Node.ELEMENT_NODE]),
+        );
+      });
+
+      test('does not find any', () {
+        bs = BeautifulSoup.fragment(html_placeholder_empty);
+        final elements = bs.findNextParsedAll();
+        expect(elements.isEmpty, isTrue);
+      });
     });
 
     group('findPreviousParsed', () {
-      //
+      test('finds with defined pattern (url link)', () {
+        bs = BeautifulSoup.fragment(html_prettify);
+        final element = bs.find('i');
+        expect(element, isNotNull);
+
+        final prevParsed = element!.findPreviousParsed(
+          pattern: RegExp(r'.*(.com)'),
+        );
+
+        expect(prevParsed, isNotNull);
+        expect(prevParsed!.data, startsWith('<a href="http://example.com'));
+        expect(prevParsed.nodeType, Node.ELEMENT_NODE);
+      });
+
+      test('does not find any', () {
+        bs = BeautifulSoup.fragment(html_placeholder_empty);
+        final element = bs.findPreviousParsed();
+        expect(element, isNull);
+      });
     });
 
     group('findPreviousParsedAll', () {
-      //
+      test('finds all any', () {
+        bs = BeautifulSoup.fragment(html_comment);
+        final element = bs.find('c');
+        expect(element, isNotNull);
+
+        final prevParsedAll =
+            element!.findPreviousParsedAll(nodeType: Node.COMMENT_NODE);
+        expect(prevParsedAll.length, 1);
+        expect(prevParsedAll[0].data, equals('<!-- some comment -->'));
+        expect(prevParsedAll[0].nodeType, Node.COMMENT_NODE);
+      });
+
+      test('finds all with defined pattern and nodeType', () {
+        final element = bs.findAll('p').last;
+
+        // find all elements that starts with: <p class="story"
+        final prevParsedAll = element.findPreviousParsedAll(
+          pattern: RegExp(r'id="link1"'),
+        );
+        expect(prevParsedAll.length, 2);
+        expect(
+          prevParsedAll[0].data,
+          startsWith('<p class="story">Once upon a time'),
+        );
+        // TODO: fix nextParsedAll/prevParsedAll, should output as well: <a href="http://example.com/elsie" class="sister
+        expect(
+          prevParsedAll[1].data,
+          startsWith('<html><head>\n'),
+        );
+        expect(
+          prevParsedAll.map((e) => e.nodeType),
+          equals(<int>[Node.ELEMENT_NODE, Node.ELEMENT_NODE]),
+        );
+      });
+
+      test('does not find any', () {
+        bs = BeautifulSoup.fragment(html_placeholder_empty);
+        final elements = bs.findPreviousParsedAll();
+        expect(elements.isEmpty, isTrue);
+      });
     });
   });
 }

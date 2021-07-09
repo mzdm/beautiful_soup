@@ -243,6 +243,7 @@ class Bs4Element extends Shared
 
   @override
   List<Node> get nextParsedAll {
+    // TODO: iterate also in siblings though descendants?
     final nextParsedAll = <Node>[];
 
     final element = this.element;

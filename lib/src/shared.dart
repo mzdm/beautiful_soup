@@ -266,43 +266,56 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   }
 
   @override
-  Node? findNextParsed(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  }) {
-    // TODO: implement findNextParsed
-    throw UnimplementedError();
+  Node? findNextParsed({RegExp? pattern, int? nodeType}) {
+    final filtered = findNextParsedAll(pattern: pattern, nodeType: nodeType);
+    return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
-  List<Node> findNextParsedAll(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  }) {
-    // TODO: implement findNextParsedAll
-    throw UnimplementedError();
+  List<Node> findNextParsedAll({RegExp? pattern, int? nodeType}) {
+    final bs4 = _bs4;
+    final bs4NextParsedAll = bs4.nextParsedAll;
+    if (bs4NextParsedAll.isEmpty) return <Node>[];
+    if (pattern == null && nodeType == null) return bs4NextParsedAll;
+
+    final filtered = bs4NextParsedAll.where((node) {
+      if (pattern != null && nodeType == null) {
+        return pattern.hasMatch(node.data);
+      } else if (pattern == null && nodeType != null) {
+        return nodeType == node.nodeType;
+      } else {
+        return (nodeType == node.nodeType) && (pattern!.hasMatch(node.data));
+      }
+    });
+
+    return filtered.toList();
   }
 
   @override
-  Node? findPreviousParsed(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  }) {
-    // TODO: implement findPreviousParsed
-    throw UnimplementedError();
+  Node? findPreviousParsed({RegExp? pattern, int? nodeType}) {
+    final filtered =
+        findPreviousParsedAll(pattern: pattern, nodeType: nodeType);
+    return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
-  List<Node> findPreviousParsedAll(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  }) {
-    // TODO: implement findPreviousParsedAll
-    throw UnimplementedError();
+  List<Node> findPreviousParsedAll({RegExp? pattern, int? nodeType}) {
+    final bs4 = _bs4;
+    final bs4PrevParsedAll = bs4.previousParsedAll;
+    if (bs4PrevParsedAll.isEmpty) return <Node>[];
+    if (pattern == null && nodeType == null) return bs4PrevParsedAll;
+
+    final filtered = bs4PrevParsedAll.where((node) {
+      if (pattern != null && nodeType == null) {
+        return pattern.hasMatch(node.data);
+      } else if (pattern == null && nodeType != null) {
+        return nodeType == node.nodeType;
+      } else {
+        return (nodeType == node.nodeType) && (pattern!.hasMatch(node.data));
+      }
+    });
+
+    return filtered.toList();
   }
 
   @override

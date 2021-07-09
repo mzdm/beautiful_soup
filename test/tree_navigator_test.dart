@@ -450,7 +450,7 @@ void main() {
       });
     });
 
-    group('prevParsedAll', () {
+    group('nextParsedAll', () {
       setUp(() {
         bs = BeautifulSoup.fragment(html_comment);
       });

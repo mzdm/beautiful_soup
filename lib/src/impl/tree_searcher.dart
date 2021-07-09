@@ -202,21 +202,13 @@ abstract class TreeSearcherImpl {
   ///
   /// {@macro tree_searcher_find}
   /// {@macro tree_searcher_find2}
-  Node? findNextParsed(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  });
+  Node? findNextParsed({RegExp? pattern, int? nodeType});
 
   /// {@macro tree_searcher_findNextParsed}
   ///
   /// {@macro tree_searcher_find}
   /// {@macro tree_searcher_find2}
-  List<Node> findNextParsedAll(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  });
+  List<Node> findNextParsedAll({RegExp? pattern, int? nodeType});
 
   /// {@template tree_searcher_findPreviousParsed}
   /// These methods use [previousParsed] to iterate over the tags, comments,
@@ -228,19 +220,12 @@ abstract class TreeSearcherImpl {
   ///
   /// {@macro tree_searcher_find}
   /// {@macro tree_searcher_find2}
-  Node? findPreviousParsed(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  });
+  Node? findPreviousParsed({RegExp? pattern, int? nodeType});
 
   /// {@macro tree_searcher_findPreviousParsed}
   ///
   /// {@macro tree_searcher_find}
   /// {@macro tree_searcher_find2}
-  List<Node> findPreviousParsedAll(
-    String name, {
-    Map<String, Object>? attrs,
-    String? customSelector,
-  });
+  /// // TODO: Update docs to new parameters
+  List<Node> findPreviousParsedAll({RegExp? pattern, int? nodeType});
 }
