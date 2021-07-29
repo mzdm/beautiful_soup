@@ -3,6 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Searching the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree).
+/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp), id (String/bool), class_ (String/bool), CSS select (String)
 abstract class TreeSearcherImpl {
   /// Returns the top most (first) element of the parse tree, of any tag type.
   Bs4Element? findFirstAny();

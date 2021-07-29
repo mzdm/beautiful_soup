@@ -629,7 +629,7 @@ void main() {
           prevParsedAll[0].data,
           startsWith('<p class="story">Once upon a time'),
         );
-        // TODO: fix nextParsedAll/prevParsedAll, should output as well: <a href="http://example.com/elsie" class="sister
+        // TODO: recursive search: nextParsedAll/prevParsedAll, should output as well: <a href="http://example.com/elsie" class="sister
         expect(
           prevParsedAll[1].data,
           startsWith('<html><head>\n'),
