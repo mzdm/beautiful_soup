@@ -2,7 +2,6 @@
 import 'dart:collection';
 
 import 'package:html/dom.dart';
-import 'package:source_span/src/file.dart';
 
 import 'extensions.dart';
 import 'helpers.dart';
@@ -402,14 +401,6 @@ class Bs4Element extends Shared
   @override
   set attributes(LinkedHashMap<Object, String> _attributes) =>
       _element.attributes = _attributes;
-
-  @override
-  LinkedHashMap<Object, FileSpan>? get _attributeSpans =>
-      _element.attributeSpans;
-
-  @override
-  LinkedHashMap<Object, FileSpan>? get _attributeValueSpans =>
-      _element.attributeValueSpans;
 
   @override
   CssClassSet get _classes => _element.classes;

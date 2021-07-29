@@ -2,7 +2,6 @@
 import 'dart:collection';
 
 import 'package:html/dom.dart';
-import 'package:source_span/src/file.dart';
 
 import '../bs4_element.dart';
 
@@ -55,22 +54,6 @@ abstract class ElementImpl {
   LinkedHashMap<Object, String> get attributes;
 
   set attributes(LinkedHashMap<Object, String> _attributes);
-
-  /// If [_sourceSpan] is available, this contains the spans of each attribute.
-  /// The span of an attribute is the entire attribute, including the name and
-  /// quotes (if any). For example, the span of "attr" in `<a attr="value">`
-  /// would be the text `attr="value"`.
-  ///
-  /// Copied from [Element].
-  LinkedHashMap<Object, FileSpan>? get _attributeSpans;
-
-  /// If [_sourceSpan] is available, this contains the spans of each attribute's
-  /// value. Unlike [_attributeSpans], this span will include only the value.
-  /// For example, the value span of "attr" in `<a attr="value">` would be the
-  /// text `value`.
-  ///
-  /// Copied from [Element].
-  LinkedHashMap<Object, FileSpan>? get _attributeValueSpans;
 
   /// The set of CSS classes applied to this element.
   ///
