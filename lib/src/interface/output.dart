@@ -26,17 +26,6 @@ abstract class OutputImpl {
   /// {@macro output_getText}
   String get text;
 
-  /// Opposite of [_escape].
-  ///
-  /// HTML entities are replaced with the normal HTML characters.
-  String get _unescape;
-
-  /// Replaces typical HTML characters with special ones (HTML entities)
-  /// so it does not get interpreted as markup.
-  ///
-  /// Characters that are replaced: ", &, >, <
-  String get _escape;
-
   /// Returns the whole element's representation as a [String].
   String toString();
 }
