@@ -200,14 +200,40 @@ abstract class TreeSearcherImpl {
   /// and [findNextParsed] only returns the first match.
   /// {@endtemplate}
   ///
-  /// {@macro tree_searcher_find}
-  /// {@macro tree_searcher_find2}
+  /// {@template tree_searcher_find3Parse}
+  /// Filters:
+  ///
+  /// \- [pattern], to search only for occurrences that satisfy
+  /// the RegExp match.
+  ///
+  /// \- [nodeType], what type of node/element to search.
+  ///   * Node.ATTRIBUTE_NODE = 2;
+  ///   * Node.CDATA_SECTION_NODE = 4;
+  ///   * Node.COMMENT_NODE = 8;
+  ///   * Node.DOCUMENT_FRAGMENT_NODE = 11;
+  ///   * Node.DOCUMENT_NODE = 9;
+  ///   * Node.DOCUMENT_TYPE_NODE = 10;
+  ///   * Node.ELEMENT_NODE = 1;
+  ///   * Node.ENTITY_NODE = 6;
+  ///   * Node.ENTITY_REFERENCE_NODE = 5;
+  ///   * Node.NOTATION_NODE = 12;
+  ///   * Node.PROCESSING_INSTRUCTION_NODE = 7;
+  ///   * Node.TEXT_NODE = 3;
+  ///
+  ///
+  /// ```
+  /// // find all url links within the text node
+  /// final nextParsed = bs.findNextParsed(
+  ///   pattern: RegExp(r'.*(.com)'),
+  ///   nodeType: Node.TEXT_NODE,
+  /// );
+  /// ```
+  /// {@endtemplate}
   Node? findNextParsed({RegExp? pattern, int? nodeType});
 
   /// {@macro tree_searcher_findNextParsed}
   ///
-  /// {@macro tree_searcher_find}
-  /// {@macro tree_searcher_find2}
+  /// {@macro tree_searcher_find3Parse}
   List<Node> findNextParsedAll({RegExp? pattern, int? nodeType});
 
   /// {@template tree_searcher_findPreviousParsed}
@@ -218,14 +244,11 @@ abstract class TreeSearcherImpl {
   /// and [findPreviousParsed] only returns the first match.
   /// {@endtemplate}
   ///
-  /// {@macro tree_searcher_find}
-  /// {@macro tree_searcher_find2}
+  /// {@macro tree_searcher_find3Parse}
   Node? findPreviousParsed({RegExp? pattern, int? nodeType});
 
   /// {@macro tree_searcher_findPreviousParsed}
   ///
-  /// {@macro tree_searcher_find}
-  /// {@macro tree_searcher_find2}
-  /// // TODO: Update docs to new parameters
+  /// {@macro tree_searcher_find3Parse}
   List<Node> findPreviousParsedAll({RegExp? pattern, int? nodeType});
 }
