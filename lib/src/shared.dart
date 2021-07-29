@@ -320,6 +320,9 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
 
   @override
   String getText() => element?.text ?? findFirstAny()?.getText() ?? '';
+
+  @override
+  String get text => getText();
 }
 
 String _selectorBuilder({

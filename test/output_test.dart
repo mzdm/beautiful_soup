@@ -53,5 +53,16 @@ void main() {
         expect(bs4?.string, equals("The Dormouse's story"));
       });
     });
+
+    group('text', () {
+      test('returns text from Bs4Element instance', () {
+        var bs4 = bs.p?.find('b');
+        expect(bs4?.text, equals("The Dormouse's story"));
+
+        // should be also same with bs4element.string
+        bs4 = bs.p?.find('b');
+        expect(bs4?.string, equals("The Dormouse's story"));
+      });
+    });
   });
 }

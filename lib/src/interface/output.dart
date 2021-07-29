@@ -16,10 +16,15 @@ abstract class OutputImpl {
   /// of the documents you work with.
   void _prettify();
 
+  /// {@template output_getText}
   /// Returns the text of an element.
   ///
   /// Same like `bs4element.string`.
+  /// {@endtemplate}
   String getText();
+
+  /// {@macro output_getText}
+  String get text;
 
   /// Opposite of [_escape].
   ///

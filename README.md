@@ -94,7 +94,7 @@ The unlinked titles are not yet implemented.
     - prettify()
     - escape()
     - unescape()
-    - [getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
+    - [.text and getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
 
 Other functions from the `Element` from `html package` can be accessed via `bs4element.element`.
 
