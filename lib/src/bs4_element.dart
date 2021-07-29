@@ -1,11 +1,10 @@
-// ignore_for_file: implementation_imports
 import 'dart:collection';
 
 import 'package:html/dom.dart';
 
 import 'extensions.dart';
 import 'helpers.dart';
-import 'impl/impl.dart';
+import 'interface/interface.dart';
 import 'shared.dart';
 
 class Bs4Element extends Shared

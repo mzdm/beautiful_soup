@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import 'bs4_element.dart';
 import 'bs_soup.dart';
 import 'extensions.dart';
-import 'impl/impl.dart';
+import 'interface/interface.dart';
 
 class Tags implements TagsImpl {
   Element? element;

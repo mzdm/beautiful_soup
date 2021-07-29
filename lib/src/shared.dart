@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 
 import 'bs4_element.dart';
 import 'extensions.dart';
-import 'impl/impl.dart';
+import 'interface/interface.dart';
 import 'tags.dart';
 
 class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
