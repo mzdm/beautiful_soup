@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Searching the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree).
-/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp), id (String/bool), class_ (String/bool), CSS select (String)
+/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp), id (String/bool), class_ (String/bool)
 abstract class TreeSearcherImpl {
   /// Returns the top most (first) element of the parse tree, of any tag type.
   Bs4Element? findFirstAny();
@@ -32,7 +32,7 @@ abstract class TreeSearcherImpl {
   /// {@template tree_searcher_find2}
   /// <br>
   /// You can provide your own CSS [selector](https://drafts.csswg.org/selectors-4/#overview)
-  /// [customSelector], if it is specified then both [name] and [attrs]
+  /// [selector], if it is specified then both [name] and [attrs]
   /// will be ignored. If such selector is not implemented this method
   /// will throw [UnimplementedError].
   ///
@@ -41,7 +41,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findAll(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// Looks through a tag’s descendants and retrieves descendant
@@ -57,7 +57,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? find(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findParent}
@@ -73,7 +73,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? findParent(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@macro tree_searcher_findParent}
@@ -85,7 +85,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findParents(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findNextSibling}
@@ -101,7 +101,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? findNextSibling(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@macro tree_searcher_findNextSibling}
@@ -111,7 +111,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findNextSiblings(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findPreviousSibling}
@@ -128,7 +128,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? findPreviousSibling(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@macro tree_searcher_findPreviousSibling}
@@ -138,7 +138,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findPreviousSiblings(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findNextElement}
@@ -154,7 +154,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? findNextElement(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@macro tree_searcher_findNextElement}
@@ -164,7 +164,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findAllNextElements(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findPreviousElement}
@@ -180,7 +180,7 @@ abstract class TreeSearcherImpl {
   Bs4Element? findPreviousElement(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@macro tree_searcher_findPreviousElement}
@@ -190,7 +190,7 @@ abstract class TreeSearcherImpl {
   List<Bs4Element> findAllPreviousElements(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   });
 
   /// {@template tree_searcher_findNextParsed}

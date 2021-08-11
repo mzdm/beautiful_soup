@@ -1,3 +1,7 @@
+## NEXT
+
+- **Renamed parameter** `customSelector` to `selector` in `find` methods
+
 ## 0.1.0
 
 - Added new **Navigating the Tree** methods: `.nextElement`, `.nextElements`, `.previousElement`,

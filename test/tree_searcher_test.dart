@@ -64,7 +64,7 @@ void main() {
       });
 
       test('finds all when using customSelector', () {
-        var elements = bs.findAll('', customSelector: '.sister');
+        var elements = bs.findAll('', selector: '.sister');
 
         expect(elements.length, 3);
         expect(
@@ -75,7 +75,7 @@ void main() {
         // specifying attributes does not have influence
         elements = bs.findAll(
           '',
-          customSelector: '.sister',
+          selector: '.sister',
           attrs: {'class': 'top'},
         );
         expect(elements.length, 3);
@@ -144,7 +144,7 @@ void main() {
       });
 
       test('finds when using customSelector', () {
-        var element = bs.find('', customSelector: '#link1');
+        var element = bs.find('', selector: '#link1');
 
         expect(element, isNotNull);
         expect(
@@ -155,7 +155,7 @@ void main() {
         // specifying attributes does not have influence
         element = bs.find(
           '',
-          customSelector: '#link1',
+          selector: '#link1',
           attrs: {'class': 'top'},
         );
         expect(element, isNotNull);
@@ -406,7 +406,7 @@ void main() {
         expect(element, isNotNull);
 
         final nextElements =
-            element!.findAllNextElements('', customSelector: '.story');
+            element!.findAllNextElements('', selector: '.story');
         expect(nextElements.length, 2);
         expect(nextElements.map((e) => e.name), equals(<String>['p', 'p']));
         expect(

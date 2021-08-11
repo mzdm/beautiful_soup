@@ -16,29 +16,29 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? find(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
-    if (customSelector != null) {
-      return ((element ?? doc).querySelector(customSelector) as Element?)?.bs4;
+    if (selector != null) {
+      return ((element ?? doc).querySelector(selector) as Element?)?.bs4;
     }
     bool anyTag = _isAnyTag(name);
     if (attrs == null && !anyTag) {
       return ((element ?? doc).querySelector(name) as Element?)?.bs4;
     }
-    final selector = (anyTag && attrs == null)
+    final cssSelector = (anyTag && attrs == null)
         ? '*'
         : _selectorBuilder(tagName: name, attrs: attrs!);
-    return ((element ?? doc).querySelector(selector) as Element?)?.bs4;
+    return ((element ?? doc).querySelector(cssSelector) as Element?)?.bs4;
   }
 
   @override
   List<Bs4Element> findAll(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
-    if (customSelector != null) {
-      return ((element ?? doc).querySelectorAll(customSelector)
+    if (selector != null) {
+      return ((element ?? doc).querySelectorAll(selector)
               as List<Element>)
           .map((e) => e.bs4)
           .toList();
@@ -49,11 +49,11 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
           .map((e) => e.bs4)
           .toList();
     }
-    final selector = (anyTag && attrs == null)
+    final cssSelector = (anyTag && attrs == null)
         ? '*'
         : _selectorBuilder(tagName: name, attrs: attrs!);
     final elements =
-        ((element ?? doc).querySelectorAll(selector) as List<Element>)
+        ((element ?? doc).querySelectorAll(cssSelector) as List<Element>)
             .map((e) => e.bs4);
     return elements.toList();
   }
@@ -75,7 +75,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     String? customSelector,
   ) {
     final allResults =
-        topElement.findAll(name, attrs: attrs, customSelector: customSelector);
+        topElement.findAll(name, attrs: attrs, selector: customSelector);
 
     // findAll does not return top most element, thus must be checked if
     // it matches as well
@@ -103,10 +103,10 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? findParent(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final filtered =
-        findParents(name, attrs: attrs, customSelector: customSelector);
+        findParents(name, attrs: attrs, selector: selector);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
@@ -114,7 +114,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   List<Bs4Element> findParents(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final matched = <Bs4Element>[];
 
@@ -123,7 +123,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     if (bs4Parents.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, customSelector);
+    final allResults = _getAllResults(topElement, name, attrs, selector);
 
     final filtered = _findMatches(allResults, bs4Parents);
     matched.addAll(List.of(filtered).reversed);
@@ -135,10 +135,10 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? findNextSibling(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final filtered =
-        findNextSiblings(name, attrs: attrs, customSelector: customSelector);
+        findNextSiblings(name, attrs: attrs, selector: selector);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
@@ -146,7 +146,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   List<Bs4Element> findNextSiblings(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final matched = <Bs4Element>[];
 
@@ -155,7 +155,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     if (bs4NextSiblings.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, customSelector);
+    final allResults = _getAllResults(topElement, name, attrs, selector);
 
     final filtered = _findMatches(allResults, bs4NextSiblings);
     matched.addAll(filtered);
@@ -167,12 +167,12 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? findPreviousSibling(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final filtered = findPreviousSiblings(
       name,
       attrs: attrs,
-      customSelector: customSelector,
+      selector: selector,
     );
     return filtered.isNotEmpty ? filtered.first : null;
   }
@@ -181,7 +181,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   List<Bs4Element> findPreviousSiblings(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final matched = <Bs4Element>[];
 
@@ -190,7 +190,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     if (bs4PrevSiblings.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, customSelector);
+    final allResults = _getAllResults(topElement, name, attrs, selector);
 
     final filtered = _findMatches(allResults, bs4PrevSiblings);
     matched.addAll(List.of(filtered).reversed);
@@ -202,10 +202,10 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? findNextElement(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final filtered =
-        findAllNextElements(name, attrs: attrs, customSelector: customSelector);
+        findAllNextElements(name, attrs: attrs, selector: selector);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
@@ -213,7 +213,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   List<Bs4Element> findAllNextElements(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final matched = <Bs4Element>[];
 
@@ -222,7 +222,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     if (bs4NextElements.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, customSelector);
+    final allResults = _getAllResults(topElement, name, attrs, selector);
 
     final filtered = _findMatches(allResults, bs4NextElements);
     matched.addAll(filtered);
@@ -234,12 +234,12 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   Bs4Element? findPreviousElement(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final filtered = findAllPreviousElements(
       name,
       attrs: attrs,
-      customSelector: customSelector,
+      selector: selector,
     );
     return filtered.isNotEmpty ? filtered.first : null;
   }
@@ -248,7 +248,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
   List<Bs4Element> findAllPreviousElements(
     String name, {
     Map<String, Object>? attrs,
-    String? customSelector,
+    String? selector,
   }) {
     final matched = <Bs4Element>[];
 
@@ -257,7 +257,7 @@ class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
     if (bs4PrevElements.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, customSelector);
+    final allResults = _getAllResults(topElement, name, attrs, selector);
 
     final filtered = _findMatches(allResults, bs4PrevElements);
     matched.addAll(List.of(filtered).reversed);
