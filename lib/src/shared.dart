@@ -6,7 +6,7 @@ import 'extensions.dart';
 import 'interface/interface.dart';
 import 'tags.dart';
 
-class Shared extends Tags implements TreeSearcherImpl, OutputImpl {
+class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findFirstAny() =>
       ((element ?? doc).querySelector('html') as Element?)?.bs4 ??

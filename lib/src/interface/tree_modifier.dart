@@ -4,7 +4,7 @@ import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
 /// TODO: set/change tag name, remove attribute, newTag, clear, decompose, wrap, unwrap, smooth
-abstract class TreeModifierImpl {
+abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
 

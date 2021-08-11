@@ -8,7 +8,7 @@ import 'interface/interface.dart';
 import 'shared.dart';
 
 class Bs4Element extends Shared
-    implements ElementImpl, TreeNavigatorImpl, TreeModifierImpl {
+    implements IElement, ITreeNavigator, ITreeModifier {
   Bs4Element._(
     Element element,
   ) {

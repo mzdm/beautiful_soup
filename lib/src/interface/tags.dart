@@ -2,7 +2,7 @@ import '../bs4_element.dart';
 
 /// Contains some most common tags for quick and easy navigating
 /// down the parse tree.
-abstract class TagsImpl {
+abstract class ITags {
   /// {@template tags_common_tag}
   /// Returns the first occurrence of this tag down the parse tree.
   /// {@endtemplate}

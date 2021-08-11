@@ -1,4 +1,3 @@
-// ignore_for_file: implementation_imports
 import 'dart:collection';
 
 import 'package:html/dom.dart';
@@ -6,7 +5,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Most of the implementation comes from [`html` Dart package](https://pub.dev/packages/html).
-abstract class ElementImpl {
+abstract class IElement {
   /// Returns the **tag name** of the element.
   ///
   /// Same as [element.localName].

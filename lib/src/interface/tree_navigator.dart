@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Navigating the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigating-the-tree).
-abstract class TreeNavigatorImpl {
+abstract class ITreeNavigator {
   /// {@template tree_navigator_children}
   /// The element's (tag's) children.
   /// {@endtemplate}

@@ -5,7 +5,7 @@ import 'bs_soup.dart';
 import 'extensions.dart';
 import 'interface/interface.dart';
 
-class Tags implements TagsImpl {
+class Tags implements ITags {
   Element? element;
   Document? _doc;
   DocumentFragment? _docFragment;
@@ -13,7 +13,7 @@ class Tags implements TagsImpl {
   /// Returns [Document] or [DocumentFragment], based on what parser was used
   /// with the [BeautifulSoup] constructor.
   ///
-  /// Should not be used along with setter.
+  /// This should not be used publicly along with setter.
   ///
   /// Can return null.
   dynamic get doc => _doc ?? _docFragment;
