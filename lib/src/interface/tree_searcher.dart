@@ -1,9 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
 import 'package:html/dom.dart';
 
 import '../bs4_element.dart';
 
 /// Contains methods from [Searching the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree).
-/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp), id (String/bool), class_ (String/bool)
+/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp)
 abstract class ITreeSearcher {
   /// Returns the top most (first) element of the parse tree, of any tag type.
   Bs4Element? findFirstAny();
@@ -40,6 +41,8 @@ abstract class ITreeSearcher {
   /// {@endtemplate}
   List<Bs4Element> findAll(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -56,6 +59,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? find(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -72,6 +77,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? findParent(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -84,6 +91,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   List<Bs4Element> findParents(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -100,6 +109,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? findNextSibling(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -110,6 +121,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   List<Bs4Element> findNextSiblings(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -127,6 +140,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? findPreviousSibling(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -137,6 +152,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   List<Bs4Element> findPreviousSiblings(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -153,6 +170,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? findNextElement(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -163,6 +182,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   List<Bs4Element> findAllNextElements(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -179,6 +200,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   Bs4Element? findPreviousElement(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });
@@ -189,6 +212,8 @@ abstract class ITreeSearcher {
   /// {@macro tree_searcher_find2}
   List<Bs4Element> findAllPreviousElements(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   });

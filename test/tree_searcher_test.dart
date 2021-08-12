@@ -84,6 +84,76 @@ void main() {
           '<a class="sister" id="link3">Tillie</a>',
         );
       });
+
+      test('finds all by id', () {
+        final elements = bs.findAll('a', id: 'link1');
+
+        expect(elements.length, 1);
+        expect(
+          elements[0].toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+        expect(
+          elements[0].outerHtml,
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+
+        // any tag
+        final elementsAny = bs.findAll('*', id: 'link1');
+        expect(elementsAny.length, 1);
+        expect(
+          elementsAny[0].toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+        expect(
+          elementsAny[0].outerHtml,
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+      });
+
+      test('finds all by class_', () {
+        final elements = bs.findAll('a', class_: 'sister');
+
+        expect(elements.length, 3);
+        expect(
+          elements[0].toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+        expect(
+          elements.map((e) => e.id),
+          equals(<String>['link1', 'link2', 'link3']),
+        );
+
+        // any tag
+        final elementsAny = bs.findAll('*', class_: 'sister');
+        expect(elementsAny.length, 3);
+        expect(
+          elementsAny[0].toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+        expect(
+          elementsAny.map((e) => e.id),
+          equals(<String>['link1', 'link2', 'link3']),
+        );
+      });
+
+      test('finds all both by id and class_', () {
+        final elements = bs.findAll('a', id: 'link2', class_: 'sister');
+
+        expect(elements.length, 1);
+        expect(
+          elements[0].toString(),
+          '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
+        );
+
+        // any tag
+        final elementsAny = bs.findAll('*', id: 'link2', class_: 'sister');
+        expect(elementsAny.length, 1);
+        expect(
+          elementsAny[0].toString(),
+          '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
+        );
+      });
     });
 
     group('find', () {
@@ -162,6 +232,40 @@ void main() {
         expect(
           element!.toString(),
           '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+      });
+
+      test('finds by id', () {
+        final element = bs.find('a', id: 'link1');
+
+        expect(
+          element.toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+
+        // any tag
+        final elementAny = bs.find('*', id: 'link1');
+        expect(
+          elementAny.toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+      });
+
+      test('finds by class_', () {
+        final element = bs.find('p', class_: 'story');
+
+        expect(
+          element.toString(),
+          startsWith('<p class="story">Once upon a time there were three little'),
+        );
+      });
+
+      test('finds both by id and class_', () {
+        final element = bs.find('a', id: 'link2', class_: 'sister');
+
+        expect(
+          element.toString(),
+          '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
         );
       });
     });

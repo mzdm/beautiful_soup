@@ -1,6 +1,7 @@
 ## NEXT
 
-- **Renamed parameter** `customSelector` to `selector` in `find` methods
+- Renamed parameter `customSelector` to `selector` in **Searching the Tree** methods
+- Added new parameters to **Searching the Tree** methods: `class_`, `id` 
 
 ## 0.1.0
 

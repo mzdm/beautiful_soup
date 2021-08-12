@@ -1,3 +1,4 @@
+// ignore_for_file: non_constant_identifier_names
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:html/dom.dart';
 
@@ -15,39 +16,56 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? find(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
     if (selector != null) {
       return ((element ?? doc).querySelector(selector) as Element?)?.bs4;
     }
-    bool anyTag = _isAnyTag(name);
-    if (attrs == null && !anyTag) {
-      return ((element ?? doc).querySelector(name) as Element?)?.bs4;
+    if (id == null && class_ == null) {
+      bool anyTag = _isAnyTag(name);
+      if (attrs == null && !anyTag) {
+        return ((element ?? doc).querySelector(name) as Element?)?.bs4;
+      }
+      final cssSelector = (anyTag && attrs == null)
+          ? '*'
+          : _selectorBuilder(tagName: name, attrs: attrs!);
+      return ((element ?? doc).querySelector(cssSelector) as Element?)?.bs4;
     }
-    final cssSelector = (anyTag && attrs == null)
-        ? '*'
-        : _selectorBuilder(tagName: name, attrs: attrs!);
-    return ((element ?? doc).querySelector(cssSelector) as Element?)?.bs4;
+    return findAll(
+      name,
+      id: id,
+      class_: class_,
+      attrs: attrs,
+      selector: selector,
+    ).firstOrNull;
   }
 
   @override
   List<Bs4Element> findAll(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
     if (selector != null) {
-      return ((element ?? doc).querySelectorAll(selector)
-              as List<Element>)
+      return ((element ?? doc).querySelectorAll(selector) as List<Element>)
           .map((e) => e.bs4)
           .toList();
     }
     bool anyTag = _isAnyTag(name);
     if (attrs == null && !anyTag) {
-      return ((element ?? doc).querySelectorAll(name) as List<Element>)
+      final elements = ((element ?? doc).querySelectorAll(name) as List<Element>)
           .map((e) => e.bs4)
           .toList();
+      return _filterResults(
+        allResults: elements.toList(),
+        id: id,
+        class_: class_,
+      );
     }
     final cssSelector = (anyTag && attrs == null)
         ? '*'
@@ -55,7 +73,29 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     final elements =
         ((element ?? doc).querySelectorAll(cssSelector) as List<Element>)
             .map((e) => e.bs4);
-    return elements.toList();
+
+    return _filterResults(
+      allResults: elements.toList(),
+      id: id,
+      class_: class_,
+    );
+  }
+
+  List<Bs4Element> _filterResults({
+    required List<Bs4Element> allResults,
+    required String? id,
+    required String? class_,
+  }) {
+    if (id == null && class_ == null) return allResults;
+
+    var filtered = List.of(allResults);
+    if (class_ != null) {
+      filtered = List.of(filtered).where((e) => e.className == class_).toList();
+    }
+    if (id != null) {
+      filtered = List.of(filtered).where((e) => e.id == id).toList();
+    }
+    return filtered;
   }
 
   Bs4Element get _bs4 {
@@ -68,18 +108,20 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     return parents.isEmpty ? bs4 : parents.last;
   }
 
-  List<Bs4Element> _getAllResults(
-    Bs4Element topElement,
-    String name,
-    Map<String, Object>? attrs,
-    String? customSelector,
-  ) {
+  List<Bs4Element> _getAllResults({
+    required Bs4Element topElement,
+    required String name,
+    required String? id,
+    required String? class_,
+    required Map<String, Object>? attrs,
+    required String? selector,
+  }) {
     final allResults =
-        topElement.findAll(name, attrs: attrs, selector: customSelector);
+        topElement.findAll(name, attrs: attrs, selector: selector);
 
     // findAll does not return top most element, thus must be checked if
     // it matches as well
-    if (attrs == null && customSelector == null) {
+    if (attrs == null && selector == null) {
       if (name == '*' || name == topElement.name) {
         allResults.insert(0, topElement);
       }
@@ -102,17 +144,20 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findParent(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
-    final filtered =
-        findParents(name, attrs: attrs, selector: selector);
+    final filtered = findParents(name, attrs: attrs, selector: selector);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
   List<Bs4Element> findParents(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -123,7 +168,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     if (bs4Parents.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, selector);
+    final allResults = _getAllResults(
+      topElement: topElement,
+      name: name,
+      class_: class_,
+      id: id,
+      attrs: attrs,
+      selector: selector,
+    );
 
     final filtered = _findMatches(allResults, bs4Parents);
     matched.addAll(List.of(filtered).reversed);
@@ -134,17 +186,20 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findNextSibling(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
-    final filtered =
-        findNextSiblings(name, attrs: attrs, selector: selector);
+    final filtered = findNextSiblings(name, attrs: attrs, selector: selector);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
   List<Bs4Element> findNextSiblings(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -155,7 +210,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     if (bs4NextSiblings.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, selector);
+    final allResults = _getAllResults(
+      topElement: topElement,
+      name: name,
+      class_: class_,
+      id: id,
+      attrs: attrs,
+      selector: selector,
+    );
 
     final filtered = _findMatches(allResults, bs4NextSiblings);
     matched.addAll(filtered);
@@ -166,6 +228,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findPreviousSibling(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -180,6 +244,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   List<Bs4Element> findPreviousSiblings(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -190,7 +256,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     if (bs4PrevSiblings.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, selector);
+    final allResults = _getAllResults(
+      topElement: topElement,
+      name: name,
+      class_: class_,
+      id: id,
+      attrs: attrs,
+      selector: selector,
+    );
 
     final filtered = _findMatches(allResults, bs4PrevSiblings);
     matched.addAll(List.of(filtered).reversed);
@@ -201,6 +274,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findNextElement(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -212,6 +287,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   List<Bs4Element> findAllNextElements(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -222,7 +299,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     if (bs4NextElements.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, selector);
+    final allResults = _getAllResults(
+      topElement: topElement,
+      name: name,
+      class_: class_,
+      id: id,
+      attrs: attrs,
+      selector: selector,
+    );
 
     final filtered = _findMatches(allResults, bs4NextElements);
     matched.addAll(filtered);
@@ -233,6 +317,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   Bs4Element? findPreviousElement(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -247,6 +333,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   List<Bs4Element> findAllPreviousElements(
     String name, {
+    String? id,
+    String? class_,
     Map<String, Object>? attrs,
     String? selector,
   }) {
@@ -257,7 +345,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     if (bs4PrevElements.isEmpty) return matched;
 
     final topElement = _getTopElement(bs4);
-    final allResults = _getAllResults(topElement, name, attrs, selector);
+    final allResults = _getAllResults(
+      topElement: topElement,
+      name: name,
+      class_: class_,
+      id: id,
+      attrs: attrs,
+      selector: selector,
+    );
 
     final filtered = _findMatches(allResults, bs4PrevElements);
     matched.addAll(List.of(filtered).reversed);
