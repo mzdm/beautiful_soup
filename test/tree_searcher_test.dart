@@ -260,6 +260,22 @@ void main() {
         );
       });
 
+      test('finds by class_, variants', () {
+        bs = BeautifulSoup.fragment('<p class="body strikeout"></p>');
+
+        final element1 = bs.find('p', class_: 'strikeout');
+        expect(element1.toString(), '<p class="body strikeout"></p>');
+
+        final element2 = bs.find('p', class_: 'body');
+        expect(element2.toString(), '<p class="body strikeout"></p>');
+
+        final element3 = bs.find('p', class_: 'body strikeout');
+        expect(element3.toString(), '<p class="body strikeout"></p>');
+
+        final element4 = bs.find('p', class_: 'strikeout body');
+        expect(element4, isNull);
+      });
+
       test('finds both by id and class_', () {
         final element = bs.find('a', id: 'link2', class_: 'sister');
 

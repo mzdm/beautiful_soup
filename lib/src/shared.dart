@@ -90,7 +90,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
 
     var filtered = List.of(allResults);
     if (class_ != null) {
-      filtered = List.of(filtered).where((e) => e.className == class_).toList();
+      filtered =
+          List.of(filtered).where((e) => e.className.contains(class_)).toList();
     }
     if (id != null) {
       filtered = List.of(filtered).where((e) => e.id == id).toList();
