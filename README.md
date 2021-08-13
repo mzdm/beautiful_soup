@@ -20,14 +20,15 @@ BeautifulSoup bs = BeautifulSoup(html_doc_string);
 // use BeautifulSoup.fragment(html_doc_string) if you parse a part of html
 
 /// 2. navigate quickly to any element
-bs.body!.a!; // get String representation of this element, same as outerHtml
-bs.find('p', attrs: {'class': 'story'}); // finds first element with html tag "p" and which has "class" attribute with value "story"
+bs.body!.a!; // navigate quickly with tags, use outerHtml or toString to get outer html
+bs.find('p', class_: 'story'); // finds first element with html tag "p" and which has "class" attribute with value "story"
 bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
-bs.find('', customSelector: '#link1'); // find with custom CSS selector (other parameters are ignored)
-
-Bs4Element bs4 = bs.body!.p!; // quickly with tags
+bs.find('', selector: '#link1'); // find with custom CSS selector (other parameters are ignored)
+bs.find('*', id: 'link1'); // find by id
+bs.find('a', attrs: {'href': 'http://example.com/elsie'}); // finds by "href" attribute
 
 /// 3. perform any other actions for the navigated element
+Bs4Element bs4 = bs.body!.p!; // navigate quickly with tags
 bs4.name; // get tag name
 bs4.string; // get text
 bs4.toString(); // get String representation of this element, same as outerHtml

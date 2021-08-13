@@ -120,6 +120,10 @@ void main() {
           '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
         );
         expect(
+          elements.map((e) => e.name),
+          equals(<String>['a', 'a', 'a']),
+        );
+        expect(
           elements.map((e) => e.id),
           equals(<String>['link1', 'link2', 'link3']),
         );
@@ -256,7 +260,8 @@ void main() {
 
         expect(
           element.toString(),
-          startsWith('<p class="story">Once upon a time there were three little'),
+          startsWith(
+              '<p class="story">Once upon a time there were three little'),
         );
       });
 

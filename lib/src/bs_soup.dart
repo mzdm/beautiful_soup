@@ -20,8 +20,11 @@ import 'shared.dart';
 ///
 /// ```
 /// Bs4Element bs4 = bs.body.p; // quickly with tags
-/// Bs4Element bs4 = bs.find('p', attrs: {'class': 'story'}); // with query func
-/// Bs4Element bs4 = bs.find('', customSelector: '#link1'); // find with custom CSS selector (other parameters are ignored)
+/// Bs4Element bs4 = bs.find('p', class_: 'story'); // finds first element with html tag "p" and which has "class" attribute with value "story"
+/// Bs4Element bs4 = bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
+/// Bs4Element bs4 = bs.find('', selector: '#link1'); // find with custom CSS selector (other parameters are ignored)
+/// Bs4Element bs4 = bs.find('*', id: 'link1'); // find by id
+/// Bs4Element bs4 = bs.find('a', attrs: {'href': 'http://example.com/elsie'}); // finds by "href" attribute
 /// ```
 ///
 /// **3.** perform any actions

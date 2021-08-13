@@ -17,6 +17,13 @@ abstract class ITreeSearcher {
   ///
   /// \- [name], the tag name, use asterisk (*) to search any tag.
   ///
+  /// \- [class_], search by CSS class. Remember that a single tag can have
+  /// multiple values for its “class” attribute. When you search for a tag
+  /// that matches a certain CSS class, you’re matching against
+  /// any of its CSS classes.
+  ///
+  /// \- [id], search by 'id' attribute.
+  ///
   /// \- [attrs], for specifying the attributes of a tag, where **key** is
   /// **name of the attribute** and **value** is the **value of the attribute**
   /// (the only allowed types of the value are **String** or **bool**).
@@ -25,7 +32,8 @@ abstract class ITreeSearcher {
   ///
   /// For example:
   /// ```
-  /// bs.findAll('p', attrs: {'class': 'story'}); // finds all "p" elements which have defined "class" attribute with "story" value
+  /// bs.findAll('p', class_: 'story'); // finds all "p" elements which have defined "story" attribute with "story" value
+  /// bs.findAll('p', attrs: {'title': 'Copy'}); // finds all "p" elements which have defined "title" attribute with "Copy" value
   /// bs.findAll('*', attrs: {'class': true}); // finds all elements of any tag which have defined "class" attribute
   /// bs.findAll(customSelector: '.nav_bar'); // find all with custom selector
   /// ```
@@ -52,7 +60,9 @@ abstract class ITreeSearcher {
   ///
   /// For example:
   /// ```
-  /// bs.find('p', attrs: {'class': 'story'});
+  /// bs.find('p', class_: 'story');
+  /// bs.find('p', id: 'dialog-content');
+  /// bs.find('button', attrs: {'title': 'Copy'});
   /// ```
   ///
   /// {@macro tree_searcher_find}
