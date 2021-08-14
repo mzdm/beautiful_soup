@@ -19,19 +19,22 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     if (selector != null) {
       return ((element ?? doc).querySelector(selector) as Element?)?.bs4;
     }
-    if (id == null && class_ == null) {
+    if (id == null && class_ == null && regex == null && string == null) {
       bool anyTag = _isAnyTag(name);
-      if (attrs == null && !anyTag) {
+      bool validTag = _isValidTag(name);
+      if (attrs == null && !anyTag && validTag) {
         return ((element ?? doc).querySelector(name) as Element?)?.bs4;
       }
-      final cssSelector = (anyTag && attrs == null)
+      final cssSelector = ((!validTag || anyTag) && (attrs == null))
           ? '*'
-          : _selectorBuilder(tagName: name, attrs: attrs!);
+          : _selectorBuilder(tagName: validTag ? name : '*', attrs: attrs!);
       return ((element ?? doc).querySelector(cssSelector) as Element?)?.bs4;
     }
     return findAll(
@@ -39,6 +42,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       id: id,
       class_: class_,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     ).firstOrNull;
   }
@@ -49,44 +54,61 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
+    assert(limit == null || limit >= 0);
+
     if (selector != null) {
       return ((element ?? doc).querySelectorAll(selector) as List<Element>)
           .map((e) => e.bs4)
           .toList();
     }
     bool anyTag = _isAnyTag(name);
-    if (attrs == null && !anyTag) {
-      final elements = ((element ?? doc).querySelectorAll(name) as List<Element>)
-          .map((e) => e.bs4)
-          .toList();
-      return _filterResults(
+    bool validTag = _isValidTag(name);
+    if (attrs == null && !anyTag && validTag) {
+      final elements =
+          ((element ?? doc).querySelectorAll(name) as List<Element>)
+              .map((e) => e.bs4)
+              .toList();
+      final filtered = _filterResults(
         allResults: elements.toList(),
         id: id,
         class_: class_,
+        regex: regex,
+        string: string,
       );
+      return _limitedList(filtered, limit);
     }
-    final cssSelector = (anyTag && attrs == null)
+    final cssSelector = ((!validTag || anyTag) && (attrs == null))
         ? '*'
-        : _selectorBuilder(tagName: name, attrs: attrs!);
+        : _selectorBuilder(tagName: validTag ? name : '*', attrs: attrs!);
     final elements =
         ((element ?? doc).querySelectorAll(cssSelector) as List<Element>)
             .map((e) => e.bs4);
 
-    return _filterResults(
+    final filtered = _filterResults(
       allResults: elements.toList(),
       id: id,
       class_: class_,
+      regex: regex,
+      string: string,
     );
+    return _limitedList(filtered, limit);
   }
 
   List<Bs4Element> _filterResults({
     required List<Bs4Element> allResults,
     required String? id,
     required String? class_,
+    required Pattern? regex,
+    required Pattern? string,
   }) {
-    if (id == null && class_ == null) return allResults;
+    if (id == null && class_ == null && regex == null && string == null) {
+      return allResults;
+    }
 
     var filtered = List.of(allResults);
     if (class_ != null) {
@@ -95,6 +117,20 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     }
     if (id != null) {
       filtered = List.of(filtered).where((e) => e.id == id).toList();
+    }
+    if (regex != null) {
+      final regExp = regex.asRegExp;
+      filtered = List.of(filtered).where((e) {
+        if (regExp.hasMatch(e.name ?? '')) return true;
+        return false;
+      }).toList();
+    }
+    if (string != null) {
+      final regExp = string.asRegExp;
+      filtered = List.of(filtered).where((e) {
+        if (regExp.hasMatch(e.string)) return true;
+        return false;
+      }).toList();
     }
     return filtered;
   }
@@ -115,14 +151,26 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     required String? id,
     required String? class_,
     required Map<String, Object>? attrs,
+    required Pattern? regex,
+    required Pattern? string,
     required String? selector,
   }) {
-    final allResults =
-        topElement.findAll(name, attrs: attrs, selector: selector);
+    final allResults = topElement.findAll(
+      name,
+      attrs: attrs,
+      regex: regex,
+      string: string,
+      selector: selector,
+    );
 
     // findAll does not return top most element, thus must be checked if
     // it matches as well
-    if (attrs == null && selector == null) {
+    if (attrs == null &&
+        selector == null &&
+        id == null &&
+        class_ == null &&
+        string == null &&
+        regex == null) {
       if (name == '*' || name == topElement.name) {
         allResults.insert(0, topElement);
       }
@@ -148,6 +196,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     final filtered = findParents(name, attrs: attrs, selector: selector);
@@ -160,8 +210,12 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
+    assert(limit == null || limit >= 0);
     final matched = <Bs4Element>[];
 
     final bs4 = _bs4;
@@ -175,13 +229,19 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       class_: class_,
       id: id,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     );
 
     final filtered = _findMatches(allResults, bs4Parents);
     matched.addAll(List.of(filtered).reversed);
 
-    return matched;
+    return _limitedList(matched, limit);
+  }
+
+  List<E> _limitedList<E>(List<E> list, int? limit) {
+    return limit == null ? list : list.take(limit).toList();
   }
 
   @override
@@ -190,6 +250,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     final filtered = findNextSiblings(name, attrs: attrs, selector: selector);
@@ -202,10 +264,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
-    final matched = <Bs4Element>[];
+    assert(limit == null || limit >= 0);
 
+    final matched = <Bs4Element>[];
     final bs4 = _bs4;
     final bs4NextSiblings = bs4.nextSiblings;
     if (bs4NextSiblings.isEmpty) return matched;
@@ -217,13 +283,15 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       class_: class_,
       id: id,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     );
 
     final filtered = _findMatches(allResults, bs4NextSiblings);
     matched.addAll(filtered);
 
-    return matched;
+    return _limitedList(matched, limit);
   }
 
   @override
@@ -232,6 +300,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     final filtered = findPreviousSiblings(
@@ -248,10 +318,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
-    final matched = <Bs4Element>[];
+    assert(limit == null || limit >= 0);
 
+    final matched = <Bs4Element>[];
     final bs4 = _bs4;
     final bs4PrevSiblings = bs4.previousSiblings;
     if (bs4PrevSiblings.isEmpty) return matched;
@@ -263,13 +337,15 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       class_: class_,
       id: id,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     );
 
     final filtered = _findMatches(allResults, bs4PrevSiblings);
     matched.addAll(List.of(filtered).reversed);
 
-    return matched;
+    return _limitedList(matched, limit);
   }
 
   @override
@@ -278,6 +354,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     final filtered =
@@ -291,10 +369,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
-    final matched = <Bs4Element>[];
+    assert(limit == null || limit >= 0);
 
+    final matched = <Bs4Element>[];
     final bs4 = _bs4;
     final bs4NextElements = bs4.nextElements;
     if (bs4NextElements.isEmpty) return matched;
@@ -306,13 +388,15 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       class_: class_,
       id: id,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     );
 
     final filtered = _findMatches(allResults, bs4NextElements);
     matched.addAll(filtered);
 
-    return matched;
+    return _limitedList(matched, limit);
   }
 
   @override
@@ -321,6 +405,8 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   }) {
     final filtered = findAllPreviousElements(
@@ -337,10 +423,14 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   }) {
-    final matched = <Bs4Element>[];
+    assert(limit == null || limit >= 0);
 
+    final matched = <Bs4Element>[];
     final bs4 = _bs4;
     final bs4PrevElements = bs4.previousElements;
     if (bs4PrevElements.isEmpty) return matched;
@@ -352,27 +442,40 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       class_: class_,
       id: id,
       attrs: attrs,
+      regex: regex,
+      string: string,
       selector: selector,
     );
 
     final filtered = _findMatches(allResults, bs4PrevElements);
     matched.addAll(List.of(filtered).reversed);
 
-    return matched;
+    return _limitedList(matched, limit);
   }
 
   @override
-  Node? findNextParsed({RegExp? pattern, int? nodeType}) {
+  Node? findNextParsed({
+    RegExp? pattern,
+    int? nodeType,
+  }) {
     final filtered = findNextParsedAll(pattern: pattern, nodeType: nodeType);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
-  List<Node> findNextParsedAll({RegExp? pattern, int? nodeType}) {
+  List<Node> findNextParsedAll({
+    RegExp? pattern,
+    int? nodeType,
+    int? limit,
+  }) {
+    assert(limit == null || limit >= 0);
+
     final bs4 = _bs4;
     final bs4NextParsedAll = bs4.nextParsedAll;
     if (bs4NextParsedAll.isEmpty) return <Node>[];
-    if (pattern == null && nodeType == null) return bs4NextParsedAll;
+    if (pattern == null && nodeType == null) {
+      return _limitedList(bs4NextParsedAll, limit);
+    }
 
     final filtered = bs4NextParsedAll.where((node) {
       if (pattern != null && nodeType == null) {
@@ -384,22 +487,33 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       }
     });
 
-    return filtered.toList();
+    return _limitedList(filtered.toList(), limit);
   }
 
   @override
-  Node? findPreviousParsed({RegExp? pattern, int? nodeType}) {
+  Node? findPreviousParsed({
+    RegExp? pattern,
+    int? nodeType,
+  }) {
     final filtered =
         findPreviousParsedAll(pattern: pattern, nodeType: nodeType);
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
   @override
-  List<Node> findPreviousParsedAll({RegExp? pattern, int? nodeType}) {
+  List<Node> findPreviousParsedAll({
+    RegExp? pattern,
+    int? nodeType,
+    int? limit,
+  }) {
+    assert(limit == null || limit >= 0);
+
     final bs4 = _bs4;
     final bs4PrevParsedAll = bs4.previousParsedAll;
     if (bs4PrevParsedAll.isEmpty) return <Node>[];
-    if (pattern == null && nodeType == null) return bs4PrevParsedAll;
+    if (pattern == null && nodeType == null) {
+      return _limitedList(bs4PrevParsedAll, limit);
+    }
 
     final filtered = bs4PrevParsedAll.where((node) {
       if (pattern != null && nodeType == null) {
@@ -411,7 +525,7 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       }
     });
 
-    return filtered.toList();
+    return _limitedList(filtered.toList(), limit);
   }
 
   @override
@@ -448,3 +562,5 @@ String _selectorBuilder({
 }
 
 bool _isAnyTag(String name) => name == '*';
+
+bool _isValidTag(String name) => name != '';

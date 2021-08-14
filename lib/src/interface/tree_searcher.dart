@@ -4,7 +4,6 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Searching the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree).
-/// TODO: Add to parameters: text (String), recursive (bool) - in lists, limit (int) - in lists, pattern (RegExp)
 abstract class ITreeSearcher {
   /// Returns the top most (first) element of the parse tree, of any tag type.
   Bs4Element? findFirstAny();
@@ -52,7 +51,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// Looks through a tag’s descendants and retrieves descendant
@@ -72,6 +74,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -90,6 +94,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -104,7 +110,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// {@template tree_searcher_findNextSibling}
@@ -122,6 +131,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -134,7 +145,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// {@template tree_searcher_findPreviousSibling}
@@ -153,6 +167,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -165,7 +181,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// {@template tree_searcher_findNextElement}
@@ -183,6 +202,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -195,7 +216,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// {@template tree_searcher_findPreviousElement}
@@ -213,6 +237,8 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
   });
 
@@ -225,7 +251,10 @@ abstract class ITreeSearcher {
     String? id,
     String? class_,
     Map<String, Object>? attrs,
+    Pattern? regex,
+    Pattern? string,
     String? selector,
+    int? limit,
   });
 
   /// {@template tree_searcher_findNextParsed}
@@ -265,12 +294,19 @@ abstract class ITreeSearcher {
   /// );
   /// ```
   /// {@endtemplate}
-  Node? findNextParsed({RegExp? pattern, int? nodeType});
+  Node? findNextParsed({
+    RegExp? pattern,
+    int? nodeType,
+  });
 
   /// {@macro tree_searcher_findNextParsed}
   ///
   /// {@macro tree_searcher_find3Parse}
-  List<Node> findNextParsedAll({RegExp? pattern, int? nodeType});
+  List<Node> findNextParsedAll({
+    RegExp? pattern,
+    int? nodeType,
+    int? limit,
+  });
 
   /// {@template tree_searcher_findPreviousParsed}
   /// These methods use [previousParsed] to iterate over the tags, comments,
@@ -281,10 +317,17 @@ abstract class ITreeSearcher {
   /// {@endtemplate}
   ///
   /// {@macro tree_searcher_find3Parse}
-  Node? findPreviousParsed({RegExp? pattern, int? nodeType});
+  Node? findPreviousParsed({
+    RegExp? pattern,
+    int? nodeType,
+  });
 
   /// {@macro tree_searcher_findPreviousParsed}
   ///
   /// {@macro tree_searcher_find3Parse}
-  List<Node> findPreviousParsedAll({RegExp? pattern, int? nodeType});
+  List<Node> findPreviousParsedAll({
+    RegExp? pattern,
+    int? nodeType,
+    int? limit,
+  });
 }

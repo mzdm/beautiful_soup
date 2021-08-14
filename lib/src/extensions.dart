@@ -47,3 +47,10 @@ extension NodeExt on Node {
 extension ListExt<E> on List<E> {
   E? get firstOrNull => isEmpty ? null : first;
 }
+
+extension PatternExt on Pattern {
+  RegExp get asRegExp {
+    if (this is RegExp) return this as RegExp;
+    return RegExp(toString());
+  }
+}

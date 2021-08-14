@@ -63,7 +63,7 @@ void main() {
         expect(elements.last.outerHtml, '<a href="unknown">Some name</a>');
       });
 
-      test('finds all when using customSelector', () {
+      test('finds all when using selector', () {
         var elements = bs.findAll('', selector: '.sister');
 
         expect(elements.length, 3);
@@ -156,6 +156,84 @@ void main() {
         expect(
           elementsAny[0].toString(),
           '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
+        );
+      });
+
+      test('finds all by regex', () {
+        final elements = bs.findAll('*', regex: r'^b');
+
+        expect(elements.length, 2);
+        expect(
+          elements[0].toString(),
+          startsWith('<body>\n'),
+        );
+        expect(
+          elements[1].toString(),
+          "<b>The Dormouse's story</b>",
+        );
+      });
+
+      test('finds all by string, part of string', () {
+        final elements = bs.findAll('*', string: r'ie$');
+        expect(elements.length, 3);
+        expect(
+          elements.map((e) => e.id),
+          equals(<String>['link1', 'link2', 'link3']),
+        );
+      });
+
+      test('finds all by string, exact string match', () {
+        final elements = bs.findAll('*', string: r'^Some name$');
+        expect(elements.length, 1);
+        expect(
+          elements.first.toString(),
+          '<a href="unknown">Some name</a>',
+        );
+      });
+
+      test('finds all with the given tag and limit', () {
+        final elements = bs.findAll('a', limit: 1);
+        expect(elements.length, 1);
+        expect(elements.every((e) => e.name == 'a'), isTrue);
+        expect(
+          elements.first.toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+
+        final elements2 = bs.findAll('a', limit: 2);
+        expect(elements2.length, 2);
+        expect(elements2.every((e) => e.name == 'a'), isTrue);
+        expect(
+          elements2[0].toString(),
+          '<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>',
+        );
+        expect(
+          elements2[1].toString(),
+          '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
+        );
+
+        final elements3 = bs.findAll('a', limit: 0);
+        expect(elements3.length, 0);
+
+        final elements4 = bs.findAll('a', limit: 100);
+        expect(elements4.length, 4);
+        expect(elements4.every((e) => e.name == 'a'), isTrue);
+      });
+
+      test('does not find with invalid limit', () {
+        expect(
+          () => bs.findAll('a', limit: -1),
+          throwsA(isA<AssertionError>()),
+        );
+
+        expect(
+          () => bs.findAll('', limit: -2),
+          throwsA(isA<AssertionError>()),
+        );
+
+        expect(
+          () => bs.findAll('*', limit: -50),
+          throwsA(isA<AssertionError>()),
         );
       });
     });
@@ -287,6 +365,27 @@ void main() {
         expect(
           element.toString(),
           '<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>',
+        );
+      });
+
+      test('finds by regex', () {
+        final element = bs.find('*', regex: r'^he');
+        expect(element.toString(), startsWith('<head>'));
+      });
+
+      test('finds by string', () {
+        const pattern = r'^The Dormouse';
+
+        final element = bs.find('*', string: pattern);
+        expect(
+          element.toString(),
+          equals("<title>The Dormouse's story</title>"),
+        );
+
+        final element2 = bs.find('*', string: RegExp(pattern));
+        expect(
+          element2.toString(),
+          equals("<title>The Dormouse's story</title>"),
         );
       });
     });
