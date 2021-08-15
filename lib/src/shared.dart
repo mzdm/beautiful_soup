@@ -434,7 +434,19 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   }
 
   @override
-  String getText() => element?.text ?? findFirstAny()?.getText() ?? '';
+  String getText({String separator = '', bool strip = false}) {
+    if (separator.isEmpty && !strip) {
+      return element?.text ?? _bs4.text;
+    }
+
+    final texts = _bs4.nextParsedAll
+        .where((node) => node.nodeType == Node.TEXT_NODE)
+        .map((textNode) => strip ? textNode.data.trim() : textNode.data)
+        .toList()
+          ..removeWhere((e) => e.isEmpty);
+
+    return texts.join(separator);
+  }
 
   @override
   String get text => getText();

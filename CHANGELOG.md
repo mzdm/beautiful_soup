@@ -1,3 +1,7 @@
+## NEXT
+
+- Added new parameters to `getText()` **Output** method: `separator`, `strip`
+
 ## 0.2.0
 
 - Renamed parameter `customSelector` to `selector` in **Searching the Tree** methods

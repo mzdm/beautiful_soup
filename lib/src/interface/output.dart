@@ -1,7 +1,7 @@
 import '../bs_soup.dart';
 
 /// Contains methods from [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output).
-/// TODO: prettify, getText params: separator(String) and strip(bool)
+/// TODO: prettify
 abstract class IOutput {
   /// The method will turn a [BeautifulSoup] parse tree into a nicely
   /// formatted Unicode string, with a separate line for each tag and
@@ -22,7 +22,13 @@ abstract class IOutput {
   ///
   /// Same like `bs4element.string`.
   /// {@endtemplate}
-  String getText();
+  ///
+  /// \- [separator] - Strings will be concatenated using this separator.
+  ///
+  /// \- [strip] If `true`, strings will be stripped before being concatenated
+  /// (strips whitespace from the beginning and end of each bit of text).
+  /// `false` by default.
+  String getText({String separator, bool strip});
 
   /// {@macro output_getText}
   String get text;

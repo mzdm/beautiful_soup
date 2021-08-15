@@ -52,6 +52,59 @@ void main() {
         bs4 = bs.p?.find('b');
         expect(bs4?.string, equals("The Dormouse's story"));
       });
+
+      test('returns text, unstripped', () {
+        final bs4Text = bs.find('p', class_: 'story')?.getText();
+        expect(
+          bs4Text,
+          startsWith('Once upon a time there were three little sister'),
+        );
+        expect(
+          bs4Text,
+          contains('         Elsie'),
+        );
+      });
+
+      test('returns text, stripped', () {
+        final bs4Text = bs.find('p', class_: 'story')?.getText(strip: true);
+        expect(
+          bs4Text,
+          startsWith(
+              'Once upon a time there were three little sisters; and their names wereElsie,LacieandTillie'),
+        );
+      });
+
+      test('returns text, stripped with separator', () {
+        final bs4Text =
+            bs.find('p', class_: 'story')?.getText(separator: ' ', strip: true);
+        expect(
+          bs4Text,
+          startsWith(
+              'Once upon a time there were three little sisters; and their names were Elsie , Lacie and Tillie'),
+        );
+      });
+
+      test('nested getText, fragment example', () {
+        bs = BeautifulSoup.fragment(
+            '<a href="http://example.com/">\nI linked to <i>example.com</i>\n</a>');
+        final bs4TextNoParams = bs.getText();
+        expect(
+          bs4TextNoParams,
+          equals('\nI linked to example.com\n'),
+        );
+
+        final bs4TextSeparator = bs.getText(separator: '|');
+        expect(
+          bs4TextSeparator,
+          equals('\nI linked to |example.com|\n'),
+        );
+
+        final bs4TextSeparatorStrip = bs.getText(separator: '|', strip: true);
+        expect(
+          bs4TextSeparatorStrip,
+          equals('I linked to|example.com'),
+        );
+      });
     });
 
     group('text', () {
