@@ -1,7 +1,7 @@
 name: beautiful_soup_dart
 description: Dart native package inspired by Beautiful Soup 4 Python library. Provides easy ways of navigating, searching, and modifying the HTML tree.
 homepage: https://github.com/mzdm/beautiful_soup
-version: 0.1.0
+version: 0.2.0
 
 environment:
   sdk: '>=2.12.0 <3.0.0'

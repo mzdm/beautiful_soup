@@ -1,4 +1,4 @@
-## NEXT
+## 0.2.0
 
 - Renamed parameter `customSelector` to `selector` in **Searching the Tree** methods
 - Added new parameters to **Searching the Tree** methods: `id`, `class_`, `regex`, 
