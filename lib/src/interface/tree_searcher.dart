@@ -21,12 +21,30 @@ abstract class ITreeSearcher {
   /// that matches a certain CSS class, you’re matching against
   /// any of its CSS classes.
   ///
+  /// For example for HTML `'<p class="body strikeout"></p>'`
+  ///
+  /// 1) `class_: 'body'` ... matches
+  ///
+  /// 2) `class_: 'body strikeout'` ... matches
+  ///
+  /// 3) `class_: 'strikeout body'` ... does not match (different order)
+  ///
   /// \- [id], search by 'id' attribute.
   ///
   /// \- [attrs], for specifying the attributes of a tag, where **key** is
   /// **name of the attribute** and **value** is the **value of the attribute**
   /// (the only allowed types of the value are **String** or **bool**).
   /// Use `true` as value of an attribute to search for any attribute values.
+  ///
+  /// \- [regex], search for element names, via [Pattern].
+  ///
+  /// For example: `regex: r'^b'` ... will search for  &lt;b&gt;, &lt;body&gt;, etc. elements.
+  ///
+  /// \- [string], search for strings (text) inside of elements, via [Pattern].
+  ///
+  /// For example: `string: r'^Article #\d*'`
+  ///
+  /// \- [limit], to take only a certain number of results.
   /// {@endtemplate}
   ///
   /// For example:
@@ -62,7 +80,7 @@ abstract class ITreeSearcher {
   ///
   /// For example:
   /// ```
-  /// bs.find('p', class_: 'story');
+  /// bs.find('*', class_: 'story'); // any element with "class" attribute "story"
   /// bs.find('p', id: 'dialog-content');
   /// bs.find('button', attrs: {'title': 'Copy'});
   /// ```

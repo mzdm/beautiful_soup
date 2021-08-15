@@ -24,7 +24,9 @@ bs.body!.a!; // navigate quickly with tags, use outerHtml or toString to get out
 bs.find('p', class_: 'story'); // finds first element with html tag "p" and which has "class" attribute with value "story"
 bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
 bs.find('', selector: '#link1'); // find with custom CSS selector (other parameters are ignored)
-bs.find('*', id: 'link1'); // find by id
+bs.find('*', id: 'link1'); // any element with id "link1"
+bs.find('*', regex: r'^b'); // find any elements that which tags starts with "b", for example: body, b, ...
+bs.find('p', string: r'^Article #\d*'); // find "p" elements which texts starts with "Article #[number]"
 bs.find('a', attrs: {'href': 'http://example.com/elsie'}); // finds by "href" attribute
 
 /// 3. perform any other actions for the navigated element
