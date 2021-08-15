@@ -1,7 +1,7 @@
 import '../bs_soup.dart';
 
 /// Contains methods from [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output).
-/// TODO: prettify, encode/decode?, getText params: separator(String) and strip(bool)
+/// TODO: prettify, getText params: separator(String) and strip(bool)
 abstract class IOutput {
   /// The method will turn a [BeautifulSoup] parse tree into a nicely
   /// formatted Unicode string, with a separate line for each tag and

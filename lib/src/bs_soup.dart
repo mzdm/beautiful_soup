@@ -24,8 +24,8 @@ import 'shared.dart';
 /// Bs4Element bs4 = bs.findAll('a', attrs: {'class': true}); // finds all elements with html tag "a" and which have defined "class" attribute with whatever value
 /// Bs4Element bs4 = bs.find('', selector: '#link1'); // find with custom CSS selector (other parameters are ignored)
 /// Bs4Element bs4 = bs.find('*', id: 'link1'); // find by id
-/// Bs4Element bs4 = bs.find('*', regex: r'^b'); // find any elements that which tags starts with "b", for example: body, b, ...
-/// Bs4Element bs4 = bs.find('p', string: r'^Article #\d*'); // find "p" elements which texts starts with "Article #[number]"
+/// Bs4Element bs4 = bs.find('*', regex: r'^b'); // find any element which tag starts with "b", for example: body, b, ...
+/// Bs4Element bs4 = bs.find('p', string: r'^Article #\d*'); // find "p" element which text starts with "Article #[number]"
 /// Bs4Element bs4 = bs.find('a', attrs: {'href': 'http://example.com/elsie'}); // finds by "href" attribute
 /// ```
 ///
