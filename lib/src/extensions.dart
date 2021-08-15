@@ -49,8 +49,5 @@ extension ListExt<E> on List<E> {
 }
 
 extension PatternExt on Pattern {
-  RegExp get asRegExp {
-    if (this is RegExp) return this as RegExp;
-    return RegExp(toString());
-  }
+  RegExp get asRegExp => this is RegExp ? this as RegExp : RegExp(toString());
 }
