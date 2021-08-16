@@ -402,23 +402,16 @@ class Bs4Element extends Shared
       _element.attributes = _attributes;
 
   @override
-  CssClassSet get _classes => _element.classes;
+  CssClassSet get classes => _element.classes;
 
   @override
   NodeList get nodes => _element.nodes;
 
   @override
-  void _reparentChildren(Node newParent) =>
-      _element.reparentChildren(newParent);
+  void reparentChildren(Node newParent) => _element.reparentChildren(newParent);
 
   @override
-  Bs4Element _clone(bool deep) => (_element.clone(deep)).bs4;
-
-  @override
-  bool _hasContent() => _element.hasContent();
-
-  @override
-  bool _contains(Node node) => _element.contains(node);
+  Bs4Element clone(bool deep) => (_element.clone(deep)).bs4;
 
   @override
   String? operator [](String name) => _element.attributes[name];
