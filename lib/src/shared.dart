@@ -451,6 +451,38 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   String get text => getText();
 
+  @override
+  String prettify() {
+    final htmlDoc = _bs4.outerHtml;
+    final topElement = findFirstAny()?.clone(true);
+    if (topElement == null || topElement.nextParsed == null) {
+      return htmlDoc;
+    }
+
+    final nextParsedAll = List.of(topElement.nextParsedAll);
+    for (final nextParsed in nextParsedAll) {
+      topElement.element?.nodes.remove(nextParsed);
+    }
+
+    final topClosingTag = '</${topElement.name}>';
+    final strBuffer = StringBuffer()
+      ..write(topElement.outerHtml.replaceFirst(topClosingTag, ''))
+      ..write('\n');
+
+    var currSpacing = 1;
+    for (final nextParsed in nextParsedAll) {
+      if (nextParsed == topElement.element) continue;
+      for (int i = 0; i < currSpacing; i++) {
+        strBuffer.write(' ');
+      }
+      currSpacing++;
+      strBuffer..write(nextParsed.data)..write('\n');
+    }
+
+    strBuffer.write(topClosingTag);
+    return strBuffer.toString();
+  }
+
   Bs4Element get _bs4 => element != null ? element!.bs4 : findFirstAny()!;
 }
 

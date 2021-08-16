@@ -117,5 +117,38 @@ void main() {
         expect(bs4?.string, equals("The Dormouse's story"));
       });
     });
+
+    group('prettify', () {
+      test('prettifies, example #1', () {
+        bs = BeautifulSoup.fragment(
+            '<b><!--Hey, buddy. Want to buy a used parser?--></b>');
+        expect(
+          bs.prettify(),
+          '<b>\n <!--Hey, buddy. Want to buy a used parser?-->\n</b>',
+        );
+        expect(
+          bs.prettify(),
+          _trimLeadingWhitespace(
+            '''
+          <b>
+           <!--Hey, buddy. Want to buy a used parser?-->
+          </b>''',
+          ),
+        );
+      });
+    });
   });
+}
+
+final RegExp _commonLeadingWhitespaceRE =
+    RegExp(r"([ \t]+)(?![^]*^(?!\1))", multiLine: true);
+
+// credits @Irhn: https://github.com/dart-lang/language/issues/559#issuecomment-528812035
+String _trimLeadingWhitespace(String text) {
+  var commonWhitespace = _commonLeadingWhitespaceRE.matchAsPrefix(text);
+  if (commonWhitespace != null) {
+    return text.replaceAll(
+        RegExp("^${commonWhitespace[1]}", multiLine: true), "");
+  }
+  return text;
 }

@@ -94,7 +94,7 @@ The unlinked titles are not yet implemented.
     - unwrap()
     - smooth()
 - [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output)
-    - prettify()
+    - [prettify()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#pretty-printing)
     - [.text and getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
 
 Other functions from the `Element` from `html package` can be accessed via `bs4element.element`.

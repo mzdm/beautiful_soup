@@ -4,18 +4,18 @@ import '../bs_soup.dart';
 /// TODO: prettify
 abstract class IOutput {
   /// The method will turn a [BeautifulSoup] parse tree into a nicely
-  /// formatted Unicode string, with a separate line for each tag and
+  /// formatted [String], with a separate line for each tag and
   /// each string.
   ///
-  /// You can call [_prettify] on the top-level BeautifulSoup object, or on
+  /// You can call [prettify] on the top-level BeautifulSoup object, or on
   /// any of its element objects.
   ///
-  /// Since it adds whitespace (in the form of newlines), [_prettify] changes
+  /// Since it adds whitespace (in the form of newlines), [prettify] changes
   /// the meaning of an HTML document and should not be used to reformat one.
   ///
-  /// The goal of [_prettify] is to help you visually understand the structure
+  /// The **goal** of [prettify] is to **help you visually understand the structure**
   /// of the documents you work with.
-  void _prettify();
+  String prettify();
 
   /// {@template output_getText}
   /// Returns the text of an element.
