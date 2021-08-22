@@ -453,10 +453,9 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
 
   @override
   String prettify() {
-    final htmlDoc = _bs4.outerHtml;
     final topElement = findFirstAny()?.clone(true);
     if (topElement == null || topElement.nextParsed == null) {
-      return htmlDoc;
+      return _bs4.outerHtml;
     }
 
     final nextParsedAll = List.of(topElement.nextParsedAll);
@@ -470,13 +469,52 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       ..write('\n');
 
     var currSpacing = 1;
+    // print(nextParsedAll.join('\n'));
+    String? prevNodeData;
     for (final nextParsed in nextParsedAll) {
       if (nextParsed == topElement.element) continue;
       for (int i = 0; i < currSpacing; i++) {
         strBuffer.write(' ');
       }
       currSpacing++;
-      strBuffer..write(nextParsed.data)..write('\n');
+
+      String? currClosingTag;
+      String? currTagData;
+      if (nextParsed.nodeType == Node.ELEMENT_NODE) {
+        final getTagData = (Element element) {
+          currClosingTag = '</${element.localName}>';
+          final elementTagData =
+              element.outerHtml.replaceFirst(currClosingTag!, '');
+          return elementTagData;
+        };
+        currTagData = getTagData(nextParsed.clone(false) as Element);
+      }
+
+      if (currTagData != null) {
+        strBuffer..write(currTagData)..write('\n');
+
+        for (int i = 0; i < currSpacing - 1; i++) {
+          strBuffer.write(' ');
+        }
+        currSpacing++;
+      }
+
+      final nodeData = nextParsed.nodeType == Node.ELEMENT_NODE
+          ? (nextParsed as Element).innerHtml
+          : nextParsed.clone(true).data;
+
+      // print(nodeData + ' --- ' + prevNodeData.toString());
+      if (prevNodeData != nodeData) {
+        strBuffer..write(nodeData)..write('\n');
+        if (currClosingTag != null) {
+          for (int i = 0; i < currSpacing - 1; i++) {
+            strBuffer.write(' ');
+          }
+          strBuffer..write(currClosingTag)..write('\n');
+        }
+      }
+
+      prevNodeData = nodeData;
     }
 
     strBuffer.write(topClosingTag);

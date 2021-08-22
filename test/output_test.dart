@@ -122,10 +122,7 @@ void main() {
       test('prettifies, example #1', () {
         bs = BeautifulSoup.fragment(
             '<b><!--Hey, buddy. Want to buy a used parser?--></b>');
-        expect(
-          bs.prettify(),
-          '<b>\n <!--Hey, buddy. Want to buy a used parser?-->\n</b>',
-        );
+
         expect(
           bs.prettify(),
           _trimLeadingWhitespace(
@@ -135,16 +132,42 @@ void main() {
           </b>''',
           ),
         );
+        expect(
+          bs.prettify(),
+          '<b>\n <!--Hey, buddy. Want to buy a used parser?-->\n</b>',
+        );
+      });
+
+      test('prettifies, example #2', () {
+        bs = BeautifulSoup.fragment('<a><b>text1</b><c>text2</c></b></a>');
+
+        expect(
+          bs.prettify(),
+          _trimLeadingWhitespace(
+            '''
+          <a>
+           <b>
+           text1
+            </b>
+                 <c>
+              text2
+               </c>
+                </a>''',
+          ),
+        );
+        // expect(
+        //   bs.prettify(),
+        //   '<b>\n <!--Hey, buddy. Want to buy a used parser?-->\n</b>',
+        // );
       });
     });
   });
 }
 
-final RegExp _commonLeadingWhitespaceRE =
-    RegExp(r"([ \t]+)(?![^]*^(?!\1))", multiLine: true);
-
 // credits @Irhn: https://github.com/dart-lang/language/issues/559#issuecomment-528812035
 String _trimLeadingWhitespace(String text) {
+  final _commonLeadingWhitespaceRE =
+      RegExp(r"([ \t]+)(?![^]*^(?!\1))", multiLine: true);
   var commonWhitespace = _commonLeadingWhitespaceRE.matchAsPrefix(text);
   if (commonWhitespace != null) {
     return text.replaceAll(
