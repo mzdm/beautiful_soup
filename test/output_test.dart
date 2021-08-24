@@ -161,12 +161,12 @@ void main() {
             '''
           <a>
            <b>
-           text1
-            </b>
-                 <c>
+            text1
+           </b>
+             <c>
               text2
-               </c>
-                </a>''',
+             </c>
+          </a>''',
           ),
         );
         // expect(

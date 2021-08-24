@@ -480,13 +480,11 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     // print(nextParsedAll.join('\n'));
     String? prevNodeData;
     for (final nextParsed in nextParsedAll) {
-      indent();
-
       _TagDataExtractor? currTagData;
       if (nextParsed.nodeType == Node.ELEMENT_NODE) {
+        indent();
         currTagData =
             _TagDataExtractor.parseElement(nextParsed.clone(false) as Element);
-
         strBuffer..write(currTagData.startingTag)..write('\n');
         indent(spacing: currSpacing - 1);
       }
@@ -497,9 +495,10 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
 
       // print(nodeData + ' --- ' + prevNodeData.toString());
       if (prevNodeData != nodeData) {
+        strBuffer.write(' ');
         strBuffer..write(nodeData)..write('\n');
         if (currTagData != null) {
-          indent(spacing: currSpacing - 1, increaseSpacing: false);
+          indent(spacing: currSpacing - 2, increaseSpacing: false);
           strBuffer..write(currTagData.closingTag)..write('\n');
         }
       }
