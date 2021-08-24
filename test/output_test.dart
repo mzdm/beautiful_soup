@@ -141,6 +141,20 @@ void main() {
       test('prettifies, example #2', () {
         bs = BeautifulSoup.fragment('<a><b>text1</b><c>text2</c></b></a>');
 
+        // expect(
+        //   bs.prettify(),
+        //   _trimLeadingWhitespace(
+        //     '''
+        //   <a>
+        //    <b>
+        //     text1
+        //    </b>
+        //    <c>
+        //     text2
+        //    </c>
+        //   </a>''',
+        //   ),
+        // );
         expect(
           bs.prettify(),
           _trimLeadingWhitespace(

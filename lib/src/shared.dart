@@ -1,4 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
+
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:html/dom.dart';
 
@@ -454,49 +455,40 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
   @override
   String prettify() {
     final topElement = findFirstAny()?.clone(true);
-    if (topElement == null || topElement.nextParsed == null) {
+    if (topElement == null ||
+        topElement.element == null ||
+        topElement.nextParsed == null) {
       return _bs4.outerHtml;
     }
 
-    final nextParsedAll = List.of(topElement.nextParsedAll);
-    for (final nextParsed in nextParsedAll) {
-      topElement.element?.nodes.remove(nextParsed);
+    final strBuffer = StringBuffer();
+    var currSpacing = 1;
+
+    void indent({int? spacing, bool increaseSpacing = true}) {
+      for (int i = 0; i < (spacing ?? currSpacing); i++) {
+        strBuffer.write(' ');
+      }
+      if (increaseSpacing) currSpacing++;
     }
 
-    final topClosingTag = '</${topElement.name}>';
-    final strBuffer = StringBuffer()
-      ..write(topElement.outerHtml.replaceFirst(topClosingTag, ''))
-      ..write('\n');
+    final nextParsedAll = List.of(topElement.nextParsedAll);
+    final topElementData = _TagDataExtractor.parseElement(topElement.element!);
+    final topClosingTag = topElementData.closingTag;
 
-    var currSpacing = 1;
+    strBuffer..write(topElementData.startingTag)..write('\n');
+
     // print(nextParsedAll.join('\n'));
     String? prevNodeData;
     for (final nextParsed in nextParsedAll) {
-      if (nextParsed == topElement.element) continue;
-      for (int i = 0; i < currSpacing; i++) {
-        strBuffer.write(' ');
-      }
-      currSpacing++;
+      indent();
 
-      String? currClosingTag;
-      String? currTagData;
+      _TagDataExtractor? currTagData;
       if (nextParsed.nodeType == Node.ELEMENT_NODE) {
-        final getTagData = (Element element) {
-          currClosingTag = '</${element.localName}>';
-          final elementTagData =
-              element.outerHtml.replaceFirst(currClosingTag!, '');
-          return elementTagData;
-        };
-        currTagData = getTagData(nextParsed.clone(false) as Element);
-      }
+        currTagData =
+            _TagDataExtractor.parseElement(nextParsed.clone(false) as Element);
 
-      if (currTagData != null) {
-        strBuffer..write(currTagData)..write('\n');
-
-        for (int i = 0; i < currSpacing - 1; i++) {
-          strBuffer.write(' ');
-        }
-        currSpacing++;
+        strBuffer..write(currTagData.startingTag)..write('\n');
+        indent(spacing: currSpacing - 1);
       }
 
       final nodeData = nextParsed.nodeType == Node.ELEMENT_NODE
@@ -506,11 +498,9 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
       // print(nodeData + ' --- ' + prevNodeData.toString());
       if (prevNodeData != nodeData) {
         strBuffer..write(nodeData)..write('\n');
-        if (currClosingTag != null) {
-          for (int i = 0; i < currSpacing - 1; i++) {
-            strBuffer.write(' ');
-          }
-          strBuffer..write(currClosingTag)..write('\n');
+        if (currTagData != null) {
+          indent(spacing: currSpacing - 1, increaseSpacing: false);
+          strBuffer..write(currTagData.closingTag)..write('\n');
         }
       }
 
@@ -642,4 +632,25 @@ Iterable<Bs4Element> _findMatches(
 
 List<E> _limitedList<E>(List<E> list, int? limit) {
   return limit == null ? list : list.take(limit).toList();
+}
+
+class _TagDataExtractor {
+  const _TagDataExtractor._({this.startingTag = '', this.closingTag = ''});
+
+  final String startingTag;
+  final String closingTag;
+
+  factory _TagDataExtractor.parseElement(Element element) {
+    final topElement = element.clone(false);
+    final closingTag = '</${topElement.localName}>';
+    final startingTag = topElement.outerHtml.replaceFirst(closingTag, '');
+    return _TagDataExtractor._(
+      startingTag: startingTag,
+      closingTag: closingTag,
+    );
+  }
+
+  @override
+  String toString() =>
+      '_TagExtractor{startingTag: $startingTag, closingTag: $closingTag}';
 }
