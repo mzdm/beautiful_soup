@@ -348,5 +348,71 @@ void main() {
         );
       });
     });
+
+    group('sets and removes attributes', () {
+      test('sets and removes attributes, example #1', () {
+        bs = BeautifulSoup.fragment('<b id="boldest">bold</b>');
+        final bs4 = bs.findFirstAny();
+
+        expect(bs4, isNotNull);
+        expect(bs4!.hasAttr('id'), isTrue);
+        expect(bs4.getAttrValue('id'), equals('boldest'));
+        expect(bs4['id'], equals('boldest'));
+
+        bs4['id'] = 'verybold';
+        bs4['another-attribute'] = '1';
+        expect(
+          bs4.toString(),
+          anyOf(
+            '<b another-attribute="1" id="verybold">bold</b>',
+            '<b id="verybold" another-attribute="1">bold</b>',
+          ),
+        );
+
+        bs4.setAttr('id', 'apptheme');
+        expect(
+          bs4.toString(),
+          anyOf(
+            '<b another-attribute="1" id="apptheme">bold</b>',
+            '<b id="apptheme" another-attribute="1">bold</b>',
+          ),
+        );
+
+        bs4.removeAttr('another-attribute');
+        expect(
+          bs4.toString(),
+          '<b id="apptheme">bold</b>',
+        );
+
+        bs4.removeAttr('id');
+        expect(
+          bs4.toString(),
+          '<b>bold</b>',
+        );
+
+        expect(bs4.getAttrValue('id'), isNull);
+        expect(bs4['id'], isNull);
+      });
+
+      test('sets and removes attributes, example #2', () {
+        bs = BeautifulSoup.fragment(
+          '<blockquote class="verybold" id="1">Extremely bold</blockquote>',
+        );
+        final bs4 = bs.findFirstAny();
+
+        expect(bs4, isNotNull);
+        expect(bs4!.hasAttr('id'), isTrue);
+        expect(bs4.hasAttr('class'), isTrue);
+
+        bs4..removeAttr('id')..removeAttr('class');
+        expect(
+          bs4.toString(),
+          '<blockquote>Extremely bold</blockquote>',
+        );
+
+        expect(bs4['id'], isNull);
+        expect(bs4['class'], isNull);
+      });
+    });
   });
 }

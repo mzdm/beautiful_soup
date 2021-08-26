@@ -437,6 +437,18 @@ class Bs4Element extends Shared
       _element.attributes[name] = value;
 
   @override
+  String? getAttrValue(String name) => this[name];
+
+  @override
+  bool hasAttr(String name) => _element.attributes.containsKey(name);
+
+  @override
+  void removeAttr(String name) => _element.attributes.remove(name);
+
+  @override
+  void setAttr(String name, String value) => this[name] = value;
+
+  @override
   String toString() => outerHtml;
 }
 

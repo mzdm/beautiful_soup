@@ -3,6 +3,8 @@
 - Added new **Output** method: `prettify()`.
 - Added new **Modifying the Tree** method: `setter for .name (tag name)`.
 - Added new parameters to `getText()` **Output** method: `separator`, `strip`.
+- Added new helper methods for element's **attributes**: `removeAttr()`, `hasAttr()`, 
+`setAttr()`, `getAttrValue()`.
 
 ## 0.2.0
 

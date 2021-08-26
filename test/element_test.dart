@@ -104,5 +104,22 @@ void main() {
         expect(attr, isNull);
       });
     });
+
+    group('hasAttr', () {
+      test('finds attribute', () {
+        final bs4 = bs.body?.a;
+
+        expect(bs4, isNotNull);
+        expect(bs4!.hasAttr('href'), isTrue);
+        expect(bs4.hasAttr('class'), isTrue);
+        expect(bs4.hasAttr('id'), isTrue);
+        expect(bs4.hasAttr('article'), isFalse);
+      });
+
+      test('does not find attribute', () {
+        final bs4 = bs.title;
+        expect(bs4?.hasAttr('name'), isFalse);
+      });
+    });
   });
 }

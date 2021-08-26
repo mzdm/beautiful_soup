@@ -83,6 +83,16 @@ abstract class IElement {
   /// Copied from [Element].
   Bs4Element clone(bool deep);
 
+  /// {@template bs4element_getAttr}
   /// Gets an attribute value by [name].
+  ///
+  /// Returns `null` if attribute does not exist.
+  /// {@endtemplate}
   String? operator [](String name);
+
+  /// {@macro bs4element_getAttr}
+  String? getAttrValue(String name);
+
+  /// Returns `true` if the element has defined this attribute.
+  bool hasAttr(String name);
 }
