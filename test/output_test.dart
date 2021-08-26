@@ -141,20 +141,6 @@ void main() {
       test('prettifies, example #2', () {
         bs = BeautifulSoup.fragment('<a><b>text1</b><c>text2</c></b></a>');
 
-        // expect(
-        //   bs.prettify(),
-        //   _trimLeadingWhitespace(
-        //     '''
-        //   <a>
-        //    <b>
-        //     text1
-        //    </b>
-        //    <c>
-        //     text2
-        //    </c>
-        //   </a>''',
-        //   ),
-        // );
         expect(
           bs.prettify(),
           _trimLeadingWhitespace(
@@ -163,16 +149,16 @@ void main() {
            <b>
             text1
            </b>
-             <c>
-              text2
-             </c>
+           <c>
+            text2
+           </c>
           </a>''',
           ),
         );
-        // expect(
-        //   bs.prettify(),
-        //   '<b>\n <!--Hey, buddy. Want to buy a used parser?-->\n</b>',
-        // );
+        expect(
+          bs.prettify(),
+          '<a>\n <b>\n  text1\n </b>\n <c>\n  text2\n </c>\n</a>',
+        );
       });
     });
   });

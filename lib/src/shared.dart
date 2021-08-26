@@ -462,48 +462,50 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
     }
 
     final strBuffer = StringBuffer();
-    var currSpacing = 1;
-
-    void indent({int? spacing, bool increaseSpacing = true}) {
-      for (int i = 0; i < (spacing ?? currSpacing); i++) {
+    void indent(int? indentation) {
+      for (int i = 0; i < (indentation ?? 1); i++) {
         strBuffer.write(' ');
       }
-      if (increaseSpacing) currSpacing++;
     }
 
-    final nextParsedAll = List.of(topElement.nextParsedAll);
     final topElementData = _TagDataExtractor.parseElement(topElement.element!);
     final topClosingTag = topElementData.closingTag;
-
     strBuffer..write(topElementData.startingTag)..write('\n');
 
-    // print(nextParsedAll.join('\n'));
-    String? prevNodeData;
-    for (final nextParsed in nextParsedAll) {
-      _TagDataExtractor? currTagData;
-      if (nextParsed.nodeType == Node.ELEMENT_NODE) {
-        indent();
-        currTagData =
-            _TagDataExtractor.parseElement(nextParsed.clone(false) as Element);
-        strBuffer..write(currTagData.startingTag)..write('\n');
-        indent(spacing: currSpacing - 1);
+    final lists = <_TagDataExtractor>[];
+    if (topElement.element!.hasChildNodes()) {
+      final children = topElement.element!.nodes;
+
+      var spaces = 1;
+      for (final child in children) {
+        spaces = 1;
+        final current = _TagDataExtractor.parseNode(child, indentation: spaces);
+        lists.add(current);
+
+        final descendants = child.nodes
+            .map((node) {
+              spaces++;
+              return _recursiveNodeExtractorSearch(node, indentation: spaces);
+            })
+            .expand((e) => e)
+            .toList();
+        lists.addAll(descendants);
+      }
+    }
+
+    _TagDataExtractor? prevNode;
+    for (final item in lists) {
+      indent(item.indentation);
+      strBuffer
+        ..write(item.isElement ? item.startingTag : item.node.data)
+        ..write('\n');
+
+      if (prevNode != null && prevNode.isElement && prevNode != item) {
+        indent(prevNode.indentation);
+        strBuffer..write(prevNode.closingTag)..write('\n');
       }
 
-      final nodeData = nextParsed.nodeType == Node.ELEMENT_NODE
-          ? (nextParsed as Element).innerHtml
-          : nextParsed.clone(true).data;
-
-      // print(nodeData + ' --- ' + prevNodeData.toString());
-      if (prevNodeData != nodeData) {
-        strBuffer.write(' ');
-        strBuffer..write(nodeData)..write('\n');
-        if (currTagData != null) {
-          indent(spacing: currSpacing - 2, increaseSpacing: false);
-          strBuffer..write(currTagData.closingTag)..write('\n');
-        }
-      }
-
-      prevNodeData = nodeData;
+      prevNode = item;
     }
 
     strBuffer.write(topClosingTag);
@@ -634,22 +636,49 @@ List<E> _limitedList<E>(List<E> list, int? limit) {
 }
 
 class _TagDataExtractor {
-  const _TagDataExtractor._({this.startingTag = '', this.closingTag = ''});
+  const _TagDataExtractor._({
+    required this.node,
+    this.startingTag = '',
+    this.closingTag = '',
+    this.indentation = 1,
+  });
 
+  final Node node;
   final String startingTag;
   final String closingTag;
+  final int indentation;
 
-  factory _TagDataExtractor.parseElement(Element element) {
+  bool get isElement => node is Element;
+
+  factory _TagDataExtractor.parseNode(Node node, {int? indentation}) {
+    return node is Element
+        ? _TagDataExtractor.parseElement(node, indentation: indentation)
+        : _TagDataExtractor._(node: node, indentation: indentation ?? 1);
+  }
+
+  factory _TagDataExtractor.parseElement(Element element, {int? indentation}) {
     final topElement = element.clone(false);
     final closingTag = '</${topElement.localName}>';
     final startingTag = topElement.outerHtml.replaceFirst(closingTag, '');
     return _TagDataExtractor._(
+      node: element,
       startingTag: startingTag,
       closingTag: closingTag,
+      indentation: indentation ?? 1,
     );
   }
 
   @override
   String toString() =>
-      '_TagExtractor{startingTag: $startingTag, closingTag: $closingTag}';
+      '_TagDataExtractor{node: $node, startingTag: $startingTag, closingTag: $closingTag, indentation: $indentation}';
+}
+
+Iterable<_TagDataExtractor> _recursiveNodeExtractorSearch(
+  Node node, {
+  int? indentation,
+}) sync* {
+  yield _TagDataExtractor.parseNode(node, indentation: indentation ?? 1);
+  for (final e in node.nodes) {
+    yield* _recursiveNodeExtractorSearch(e, indentation: indentation ?? 1);
+  }
 }
