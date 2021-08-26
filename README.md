@@ -1,4 +1,4 @@
-# Beautiful Soup
+# Beautiful Soup Dart
 
 [![pub package](https://img.shields.io/pub/v/beautiful_soup_dart.svg)](https://pub.dev/packages/beautiful_soup_dart)
 ![tests](https://github.com/mzdm/beautiful_soup/actions/workflows/main.yml/badge.svg)
@@ -97,7 +97,7 @@ The unlinked titles are not yet implemented.
     - [prettify()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#pretty-printing)
     - [.text and getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
 
-Other functions from the `Element` from `html package` can be accessed via `bs4element.element`.
+Other methods from the `Element` from [`html package`](https://pub.dev/packages/html) can be accessed via `bs4element.element`.
 
 ## Features and bugs
 

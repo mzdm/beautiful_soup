@@ -1,5 +1,6 @@
 ## NEXT
 
+- Added new **Output** method: `prettify()`.
 - Added new parameters to `getText()` **Output** method: `separator`, `strip`.
 
 ## 0.2.0
@@ -16,7 +17,7 @@
   `findNextSiblings()`, `findPreviousSibling()`, `findPreviousSiblings()`,
   `findNextElement()`, `findAllNextElements()`, `findPreviousElement()`, `findAllPreviousElements()`,
   `findNextParsed()`, `findNextParsedAll()`, `findPreviousParsed()`, `findPreviousParsedAll()`.
-- Added new **Output** methods: `.text`.
+- Added new **Output** method: `.text`.
 - Added more tests. 
 - Removed unused dependency.
 - Updated README.  
