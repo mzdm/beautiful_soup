@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
-/// TODO: newTag, clear, decompose, wrap, unwrap, smooth
+/// TODO: clear, decompose, wrap, unwrap, smooth
 abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
@@ -21,8 +21,13 @@ abstract class ITreeModifier {
   /// in order.
   void extend(List<Bs4Element> element);
 
-  /// Creates a whole new tag.
-  void _newTag();
+  /// Creates a new [Bs4Element].
+  ///
+  /// * [name] - tag name
+  /// * [attrs] - attributes to be added to the tag
+  /// * [string] - text content
+  // TODO: create also from BsSoup instance
+  Bs4Element newTag(String? name, {Map<String, String>? attrs, String? string});
 
   /// It is just like [append], except the new element does not necessarily
   /// go at the end of its parent’s .[contents]. It’ll be inserted at

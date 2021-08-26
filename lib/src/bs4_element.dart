@@ -371,6 +371,20 @@ class Bs4Element extends Shared
   }
 
   @override
+  Bs4Element newTag(
+    String? name, {
+    Map<String, String>? attrs,
+    String? string,
+  }) {
+    final newElement = Element.tag(name);
+    if (attrs != null) {
+      newElement.attributes.addAll(attrs);
+    }
+    newElement.text = string;
+    return newElement.bs4;
+  }
+
+  @override
   void insert(int position, Bs4Element element) =>
       _element.nodes.insert(position, element._element);
 

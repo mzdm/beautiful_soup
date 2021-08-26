@@ -2,6 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/beautiful_soup_dart.svg)](https://pub.dev/packages/beautiful_soup_dart)
 ![tests](https://github.com/mzdm/beautiful_soup/actions/workflows/main.yml/badge.svg)
+[![codecov](https://codecov.io/gh/mzdm/beautiful_soup/branch/master/graph/badge.svg)](https://codecov.io/gh/mzdm/beautiful_soup)
 
 [comment]: <> ([![codecov]&#40;https://codecov.io/gh/mzdm/beautiful_soup/branch/master/graph/badge.svg&#41;]&#40;https://codecov.io/gh/mzdm/beautiful_soup&#41;)
 

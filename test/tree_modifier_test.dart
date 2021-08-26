@@ -414,5 +414,35 @@ void main() {
         expect(bs4['class'], isNull);
       });
     });
+
+    group('creates new tag', () {
+      test('creates new tag from bs4 instance', () {
+        bs = BeautifulSoup.fragment('<b class="boldest">Extremely bold</b>');
+
+        final bs4 = bs.findFirstAny();
+        expect(bs4, isNotNull);
+
+        final newTag = bs4!.newTag(
+          'a',
+          attrs: {'href': 'http://www.example.com'},
+        );
+        expect(newTag.name, 'a');
+        expect(newTag.toString(), '<a href="http://www.example.com"></a>');
+
+        final newTag2 = bs4.newTag(
+          'p',
+          attrs: {'class': 'story', 'id': 'topMenu'},
+          string: 'example',
+        );
+        expect(newTag2.name, 'p');
+        expect(
+          newTag2.toString(),
+          anyOf(
+            '<p class="story" id="topMenu">example</p>',
+            '<p id="topMenu" class="story">example</p>',
+          ),
+        );
+      });
+    });
   });
 }
