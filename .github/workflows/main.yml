@@ -21,6 +21,6 @@ jobs:
         run: pub global run test_coverage
       - name: Upload coverage to Codecov
         if: github.ref == 'refs/heads/master'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           file: coverage/lcov.info
