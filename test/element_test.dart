@@ -121,5 +121,16 @@ void main() {
         expect(bs4?.hasAttr('name'), isFalse);
       });
     });
+
+    group('getAttrValue', () {
+      test('finds attribute', () {
+        bs = BeautifulSoup.fragment('<b id="boldest">bold</b>');
+        final bs4 = bs.findFirstAny();
+
+        expect(bs4, isNotNull);
+        expect(bs4!.getAttrValue('id'), equals('boldest'));
+        expect(bs4['id'], equals('boldest'));
+      });
+    });
   });
 }
