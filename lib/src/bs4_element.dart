@@ -32,6 +32,22 @@ class Bs4Element extends Shared
   set string(String? value) => _element.text = value;
 
   @override
+  set name(String? name) {
+    final newElement = Element.tag(name);
+
+    final defaultNodes = _element.clone(true);
+    newElement
+      ..attributes = defaultNodes.attributes
+      ..nodes.addAll(defaultNodes.nodes);
+
+    if (_element.parentNode != null) {
+      final index = _element.parentNode!.nodes.indexOf(_element);
+      _element.parentNode!.nodes.insert(index, newElement);
+      element = _element.parentNode!.nodes[index] as Element;
+    }
+  }
+
+  @override
   String get strippedStrings {
     final strBuffer = StringBuffer();
     final strLines = _element.text.split('\n');

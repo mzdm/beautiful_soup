@@ -1,7 +1,6 @@
 import '../bs_soup.dart';
 
 /// Contains methods from [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output).
-/// TODO: prettify
 abstract class IOutput {
   /// The method will turn a [BeautifulSoup] parse tree into a nicely
   /// formatted [String], with a separate line for each tag and

@@ -104,25 +104,5 @@ void main() {
         expect(attr, isNull);
       });
     });
-
-    group('operator []=, for attribute value setter', () {
-      test('assigns a value to an existing attribute', () {
-        final bs4 = bs.body?.a;
-        expect(bs4, isNotNull);
-
-        expect(bs4!['href'], isNotNull);
-        bs4['href'] = 'new-web.com';
-        expect(bs4['href'], equals('new-web.com'));
-      });
-
-      test('creates a new attribute with that value if attr was not found', () {
-        final bs4 = bs.body?.a;
-        expect(bs4, isNotNull);
-
-        expect(bs4!['style'], isNull);
-        bs4['style'] = 'some-styles';
-        expect(bs4['style'], equals('some-styles'));
-      });
-    });
   });
 }

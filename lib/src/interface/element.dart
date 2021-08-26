@@ -6,9 +6,11 @@ import '../bs4_element.dart';
 
 /// Most of the implementation comes from [`html` Dart package](https://pub.dev/packages/html).
 abstract class IElement {
-  /// Returns the **tag name** of the element.
+  /// {@template bs4element_name}
+  /// Getter/setter of the **tag name** of the element.
   ///
   /// Same as [element.localName].
+  /// {@endtemplate}
   String? get name;
 
   /// Returns a fragment of HTML or XML that represents the element and its
@@ -83,7 +85,4 @@ abstract class IElement {
 
   /// Gets an attribute value by [name].
   String? operator [](String name);
-
-  /// Assigns a value to attribute by [name] and [value].
-  operator []=(String name, String value);
 }

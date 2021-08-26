@@ -298,5 +298,55 @@ void main() {
         );
       });
     });
+
+    group('operator []=, for attribute value setter', () {
+      test('assigns a value to an existing attribute', () {
+        final bs4 = bs.body?.a;
+        expect(bs4, isNotNull);
+
+        expect(bs4!['href'], isNotNull);
+        bs4['href'] = 'new-web.com';
+        expect(bs4['href'], equals('new-web.com'));
+      });
+
+      test('creates a new attribute with that value if attr was not found', () {
+        final bs4 = bs.body?.a;
+        expect(bs4, isNotNull);
+
+        expect(bs4!['style'], isNull);
+        bs4['style'] = 'some-styles';
+        expect(bs4['style'], equals('some-styles'));
+      });
+    });
+
+    group('set tag name', () {
+      test('changes tag name', () {
+        bs = BeautifulSoup.fragment('<b class="boldest">Extremely bold</b>');
+
+        final bs4 = bs.findFirstAny();
+        expect(bs4, isNotNull);
+        expect(bs4!.name, equals('b'));
+        expect(
+          bs4.toString(),
+          equals('<b class="boldest">Extremely bold</b>'),
+        );
+
+        // change tag name
+        bs4.name = 'blockquote';
+        expect(bs4.name, equals('blockquote'));
+        expect(
+          bs4.toString(),
+          equals('<blockquote class="boldest">Extremely bold</blockquote>'),
+        );
+
+        // null "nulls" tag name
+        bs4.name = null;
+        expect(bs4.name, isNull);
+        expect(
+          bs4.toString(),
+          equals('<null class="boldest">Extremely bold</null>'),
+        );
+      });
+    });
   });
 }

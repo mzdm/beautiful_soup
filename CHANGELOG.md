@@ -1,6 +1,7 @@
 ## NEXT
 
 - Added new **Output** method: `prettify()`.
+- Added new **Modifying the Tree** method: `setter for .name (tag name)`.
 - Added new parameters to `getText()` **Output** method: `separator`, `strip`.
 
 ## 0.2.0

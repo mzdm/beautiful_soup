@@ -3,10 +3,13 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
-/// TODO: set/change tag name, remove attribute, newTag, clear, decompose, wrap, unwrap, smooth
+/// TODO: remove attribute, newTag, clear, decompose, wrap, unwrap, smooth
 abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
+
+  /// {@macro bs4element_name}
+  set name(String? value);
 
   /// Adds an element just before the closing tags of the current element.
   ///
@@ -87,4 +90,7 @@ abstract class ITreeModifier {
 
   /// Cleans up the parse tree by consolidating adjacent strings.
   void _smooth();
+
+  /// Assigns a value to attribute by [name] and [value].
+  operator []=(String name, String value);
 }
