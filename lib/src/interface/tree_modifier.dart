@@ -64,7 +64,7 @@ abstract class ITreeModifier {
   void insertAfter(Bs4Element element, [Bs4Element? ref]);
 
   /// Removes the contents of a tag.
-  void _clear();
+  void clear();
 
   /// Removes an element from the tree.
   ///

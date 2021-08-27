@@ -418,6 +418,9 @@ class Bs4Element extends Shared
   }
 
   @override
+  void clear() => element = _element.clone(false);
+
+  @override
   Bs4Element extract() => (_element.remove() as Element).bs4;
 
   @override

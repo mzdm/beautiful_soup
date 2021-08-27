@@ -415,7 +415,7 @@ void main() {
       });
     });
 
-    group('creates new tag', () {
+    group('newTag', () {
       test('creates new tag from bs4 instance', () {
         bs = BeautifulSoup.fragment('<b class="boldest">Extremely bold</b>');
 
@@ -442,6 +442,26 @@ void main() {
             '<p id="topMenu" class="story">example</p>',
           ),
         );
+      });
+    });
+
+    group('clear', () {
+      test('removes content of the tag', () {
+        bs = BeautifulSoup.fragment(
+          '<a href="http://example.com/">I linked to <i>example.com</i></a>',
+        );
+
+        final bs4 = bs.findFirstAny();
+        expect(bs4, isNotNull);
+        expect(
+          bs4.toString(),
+          equals(
+              '<a href="http://example.com/">I linked to <i>example.com</i></a>'),
+        );
+
+        // clear tag's contents
+        bs4!.clear();
+        expect(bs4.toString(), equals('<a href="http://example.com/"></a>'));
       });
     });
   });
