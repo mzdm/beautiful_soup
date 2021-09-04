@@ -1,3 +1,6 @@
+import 'package:beautiful_soup_dart/src/bs4_element.dart';
+import 'package:beautiful_soup_dart/src/extensions.dart';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 
 import 'shared.dart';
@@ -54,6 +57,20 @@ class BeautifulSoup extends Shared {
   /// {@macro bs_soup}
   BeautifulSoup.fragment(String html_doc) {
     doc = parseFragment(html_doc);
+  }
+
+  /// {@macro tree_modifier_newTag}
+  static Bs4Element newTag(
+    String? name, {
+    Map<String, String>? attrs,
+    String? string,
+  }) {
+    final newElement = Element.tag(name);
+    if (attrs != null) {
+      newElement.attributes.addAll(attrs);
+    }
+    newElement.text = string;
+    return newElement.bs4;
   }
 
   @override

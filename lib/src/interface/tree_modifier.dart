@@ -21,12 +21,13 @@ abstract class ITreeModifier {
   /// in order.
   void extend(List<Bs4Element> element);
 
+  /// {@template tree_modifier_newTag}
   /// Creates a new [Bs4Element].
   ///
   /// * [name] - tag name
   /// * [attrs] - attributes to be added to the tag
   /// * [string] - text content
-  // TODO: create also from BsSoup instance
+  /// {@endtemplate}
   Bs4Element newTag(String? name, {Map<String, String>? attrs, String? string});
 
   /// It is just like [append], except the new element does not necessarily

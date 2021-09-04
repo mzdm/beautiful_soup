@@ -443,6 +443,15 @@ void main() {
           ),
         );
       });
+
+      test('creates new tag from static method', () {
+        final newTag = BeautifulSoup.newTag(
+          'a',
+          attrs: {'href': 'www.example.com'},
+        );
+        expect(newTag.name, 'a');
+        expect(newTag.toString(), '<a href="www.example.com"></a>');
+      });
     });
 
     group('clear', () {

@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:html/dom.dart';
 
 import 'extensions.dart';
@@ -376,12 +377,7 @@ class Bs4Element extends Shared
     Map<String, String>? attrs,
     String? string,
   }) {
-    final newElement = Element.tag(name);
-    if (attrs != null) {
-      newElement.attributes.addAll(attrs);
-    }
-    newElement.text = string;
-    return newElement.bs4;
+    return BeautifulSoup.newTag(name, attrs: attrs, string: string);
   }
 
   @override
