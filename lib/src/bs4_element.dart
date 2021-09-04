@@ -18,6 +18,10 @@ class Bs4Element extends Shared
 
   factory Bs4Element(Element element) => Bs4Element._(element);
 
+  bool _isDecomposed = false;
+
+  bool get decomposed => _isDecomposed;
+
   Element get _element => element!;
 
   @override
@@ -418,6 +422,15 @@ class Bs4Element extends Shared
 
   @override
   Bs4Element extract() => (_element.remove() as Element).bs4;
+
+  @override
+  void decompose() {
+    _isDecomposed = true;
+    _element
+      ..attributes.clear()
+      ..text = null
+      ..remove();
+  }
 
   @override
   Bs4Element replaceWith(Bs4Element otherElement) =>

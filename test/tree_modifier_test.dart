@@ -253,7 +253,6 @@ void main() {
       test('removes and returns replaced element from the parse tree', () {
         final bs4 = bs.body;
         expect(bs4, isNotNull);
-
         expect(bs4!.children.length, 3);
 
         // remove the second element "p"
@@ -269,6 +268,37 @@ void main() {
           bs4.children.map((e) => e.name),
           equals(<String>['p', 'p']),
         );
+      });
+    });
+
+    group('decompose', () {
+      test('removes and completely destroys the element and its contents', () {
+        bs = BeautifulSoup.fragment(
+          '<a href="http://example.com/">I linked to <i>example.com</i></a>',
+        );
+
+        final a_tag = bs.findFirstAny();
+        expect(a_tag, isNotNull);
+        expect(a_tag!.name, 'a');
+        expect(a_tag.children.length, 1);
+
+        // remove and destroy element "i"
+        final i_tag = bs.find('i');
+        expect(i_tag, isNotNull);
+        expect(i_tag!.toString(), '<i>example.com</i>');
+
+        i_tag.decompose();
+        expect(i_tag.decomposed, isTrue);
+        expect(a_tag.decomposed, isFalse);
+        expect(
+          a_tag.toString(),
+          '<a href="http://example.com/">I linked to </a>',
+        );
+        expect(
+          i_tag.toString(),
+          '<i></i>',
+        );
+        expect(a_tag.children.length, 0);
       });
     });
 

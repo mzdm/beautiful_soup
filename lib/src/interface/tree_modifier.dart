@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
-// TODO: decompose, wrap, unwrap, smooth
+// TODO: wrap, unwrap, smooth
 abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
@@ -73,7 +73,7 @@ abstract class ITreeModifier {
   Bs4Element extract();
 
   /// Removes a tag from the tree, then completely destroys it and its contents.
-  void _decompose();
+  void decompose();
 
   /// Removes an element from the tree, and replaces it with [otherElement].
   ///

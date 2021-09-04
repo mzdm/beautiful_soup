@@ -89,13 +89,13 @@ The unlinked titles are not yet implemented.
     - [insertBefore() and insertAfter()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#insert-before-and-insert-after)
     - [clear()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#clear)
     - [extract()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#extract)
-    - decompose()
+    - [decompose()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#decompose)
     - [replaceWith()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#replace-with)
     - wrap()
     - unwrap()
     - smooth()
 - [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output)
-    - [prettify()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#pretty-printing)
+    - [prettify()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#pretty-printing) - partial support
     - [.text and getText()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#get-text)
 
 Other methods from the `Element` from [`html package`](https://pub.dev/packages/html) can be accessed via `bs4element.element`.
