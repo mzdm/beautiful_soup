@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
-/// TODO: clear, decompose, wrap, unwrap, smooth
+// TODO: decompose, wrap, unwrap, smooth
 abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
