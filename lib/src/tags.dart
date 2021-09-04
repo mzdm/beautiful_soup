@@ -44,6 +44,12 @@ class Tags implements ITags {
   Bs4Element? get a => _findFirst('a');
 
   @override
+  Bs4Element? get b => _findFirst('b');
+
+  @override
+  Bs4Element? get i => _findFirst('i');
+
+  @override
   Bs4Element? get p => _findFirst('p');
 
   @override

@@ -6,6 +6,9 @@
 - Added new **Output** method (partial support): `prettify()`.
 - Added new helper methods for element's **attributes**: `removeAttr()`, `hasAttr()`, 
 `setAttr()`, `getAttrValue()`.
+- Added new **Tags**: `b`, `i`.
+- Added tests & coverage.
+- Updated README.
 
 ## 0.2.0
 

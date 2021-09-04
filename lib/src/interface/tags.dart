@@ -42,6 +42,12 @@ abstract class ITags {
   Bs4Element? get a;
 
   /// {@macro tags_common_tag}
+  Bs4Element? get b;
+
+  /// {@macro tags_common_tag}
+  Bs4Element? get i;
+
+  /// {@macro tags_common_tag}
   Bs4Element? get img;
 
   /// {@macro tags_common_tag}
