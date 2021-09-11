@@ -91,8 +91,8 @@ The unlinked titles are not yet implemented.
     - [extract()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#extract)
     - [decompose()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#decompose)
     - [replaceWith()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#replace-with)
-    - wrap()
-    - unwrap()
+    - [wrap()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#wrap)
+    - [unwrap()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#unwrap)
     - smooth()
 - [Output](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#output)
     - [prettify()](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#pretty-printing) - partial support

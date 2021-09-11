@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import '../bs4_element.dart';
 
 /// Contains methods from [Modifying the tree](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#modifying-the-tree).
-// TODO: wrap, unwrap, smooth
+// TODO: smooth
 abstract class ITreeModifier {
   /// {@macro bs4element_string}
   set string(String? value);
@@ -85,14 +85,17 @@ abstract class ITreeModifier {
   Bs4Element replaceWith(Bs4Element otherElement);
 
   /// Wraps an element in the tag you specify. It returns the new wrapper.
-  Bs4Element _wrap();
+  // TODO: possibility to wrap also string?
+  Bs4Element wrap(Bs4Element newParentElement);
 
   /// [unwrap] is the opposite of [wrap].
   ///
   /// It replaces a tag with whatever’s inside that tag.
   ///
   /// It’s good for stripping out markup.
-  void _unwrap();
+  ///
+  /// Like [replaceWith], `unwrap` returns the tag that was replaced.
+  Bs4Element? unwrap();
 
   /// Cleans up the parse tree by consolidating adjacent strings.
   void _smooth();

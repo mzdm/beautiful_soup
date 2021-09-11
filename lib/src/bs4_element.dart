@@ -437,6 +437,33 @@ class Bs4Element extends Shared
       (_element.replaceWith(otherElement._element) as Element).bs4;
 
   @override
+  Bs4Element wrap(Bs4Element newParentElement) {
+    final newElement = newParentElement._element.clone(true)
+      ..nodes.add(_element.clone(true));
+
+    if (_element.parentNode != null) {
+      final index = _element.parentNode!.nodes.indexOf(_element);
+      _element.parentNode!.nodes.insert(index, newElement);
+      element = _element.parentNode!.nodes[index] as Element;
+    }
+    return this;
+  }
+
+  @override
+  Bs4Element? unwrap() {
+    for (final child in _element.nodes) {
+      if (child.nodeType == Node.ELEMENT_NODE) {
+        final index = _element.nodes.indexOf(child);
+        final insideElement = _element.nodes.elementAt(index).clone(true);
+        _element.nodes
+          ..removeAt(index)
+          ..insertAll(index, insideElement.nodes);
+      }
+    }
+    return null;
+  }
+
+  @override
   LinkedHashMap<Object, String> get attributes => _element.attributes;
 
   @override

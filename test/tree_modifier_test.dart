@@ -503,5 +503,41 @@ void main() {
         expect(bs4.toString(), equals('<a href="http://example.com/"></a>'));
       });
     });
+
+    group('wrap', () {
+      test('wraps tag', () {
+        bs = BeautifulSoup.fragment('<p>I wish I was bold.</p>');
+
+        final bs4 = bs.findFirstAny();
+        expect(bs4, isNotNull);
+        expect(bs4!.name, 'p');
+
+        // wrap and return newly wrapped tag
+        expect(
+          bs4.wrap(BeautifulSoup.newTag('div')).toString(),
+          '<div><p>I wish I was bold.</p></div>',
+        );
+        expect(bs4.name, 'div');
+      });
+    });
+
+    group('unwrap', () {
+      test('unwraps tag', () {
+        bs = BeautifulSoup.fragment(
+          '<a href="http://example.com/">I linked to <i>example.com</i></a>',
+        );
+
+        final bs4 = bs.findFirstAny();
+        expect(bs4, isNotNull);
+        expect(bs4!.name, 'a');
+
+        // unwrap and strip out markup
+        bs4.unwrap();
+        expect(
+          bs4.toString(),
+          '<a href="http://example.com/">I linked to example.com</a>',
+        );
+      });
+    });
   });
 }
