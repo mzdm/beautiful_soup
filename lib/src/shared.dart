@@ -3,8 +3,6 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:html/dom.dart';
 
-import 'bs4_element.dart';
-import 'extensions.dart';
 import 'interface/interface.dart';
 import 'tags.dart';
 
@@ -444,7 +442,7 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
         .where((node) => node.nodeType == Node.TEXT_NODE)
         .map((textNode) => strip ? textNode.data.trim() : textNode.data)
         .toList()
-          ..removeWhere((e) => e.isEmpty);
+      ..removeWhere((e) => e.isEmpty);
 
     return texts.join(separator);
   }
@@ -470,7 +468,9 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
 
     final topElementData = _TagDataExtractor.parseElement(topElement.element!);
     final topClosingTag = topElementData.closingTag;
-    strBuffer..write(topElementData.startingTag)..write('\n');
+    strBuffer
+      ..write(topElementData.startingTag)
+      ..write('\n');
 
     final lists = <_TagDataExtractor>[];
     if (topElement.element!.hasChildNodes()) {
@@ -502,7 +502,9 @@ class Shared extends Tags implements ITreeSearcher, IOutput {
 
       if (prevNode != null && prevNode.isElement && prevNode != item) {
         indent(prevNode.indentation);
-        strBuffer..write(prevNode.closingTag)..write('\n');
+        strBuffer
+          ..write(prevNode.closingTag)
+          ..write('\n');
       }
 
       prevNode = item;

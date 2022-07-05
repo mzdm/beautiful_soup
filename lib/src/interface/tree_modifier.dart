@@ -98,6 +98,7 @@ abstract class ITreeModifier {
   Bs4Element? unwrap();
 
   /// Cleans up the parse tree by consolidating adjacent strings.
+  // ignore: unused_element
   void _smooth();
 
   /// {@template tree_modifier_setAttr}

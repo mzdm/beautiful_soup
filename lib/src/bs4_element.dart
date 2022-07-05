@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:html/dom.dart';
 
-import 'extensions.dart';
 import 'helpers.dart';
 import 'interface/interface.dart';
 import 'shared.dart';
@@ -60,7 +59,7 @@ class Bs4Element extends Shared
       final trimmed = str.trimLeft();
       if (trimmed != '') {
         if (strLines.length > 1) {
-          strBuffer.write(trimmed + '\n');
+          strBuffer.write('$trimmed\n');
         } else {
           strBuffer.write(trimmed);
         }
@@ -467,8 +466,8 @@ class Bs4Element extends Shared
   LinkedHashMap<Object, String> get attributes => _element.attributes;
 
   @override
-  set attributes(LinkedHashMap<Object, String> _attributes) =>
-      _element.attributes = _attributes;
+  set attributes(LinkedHashMap<Object, String> attributes) =>
+      _element.attributes = attributes;
 
   @override
   CssClassSet get classes => _element.classes;

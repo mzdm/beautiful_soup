@@ -166,9 +166,9 @@ void main() {
 
 // credits @Irhn: https://github.com/dart-lang/language/issues/559#issuecomment-528812035
 String _trimLeadingWhitespace(String text) {
-  final _commonLeadingWhitespaceRE =
+  final commonLeadingWhitespaceRE =
       RegExp(r"([ \t]+)(?![^]*^(?!\1))", multiLine: true);
-  var commonWhitespace = _commonLeadingWhitespaceRE.matchAsPrefix(text);
+  var commonWhitespace = commonLeadingWhitespaceRE.matchAsPrefix(text);
   if (commonWhitespace != null) {
     return text.replaceAll(
         RegExp("^${commonWhitespace[1]}", multiLine: true), "");

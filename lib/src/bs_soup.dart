@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:beautiful_soup_dart/src/bs4_element.dart';
 import 'package:beautiful_soup_dart/src/extensions.dart';
 import 'package:html/dom.dart';

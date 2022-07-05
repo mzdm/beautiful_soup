@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 const html_doc = """
 <html>
    <head>

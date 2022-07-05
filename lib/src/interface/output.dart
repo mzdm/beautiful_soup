@@ -34,5 +34,6 @@ abstract class IOutput {
   String get text;
 
   /// Returns the whole element's representation as a [String].
+  @override
   String toString();
 }

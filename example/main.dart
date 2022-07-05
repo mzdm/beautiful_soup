@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 
 const html_doc = """

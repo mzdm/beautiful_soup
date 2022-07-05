@@ -1,4 +1,6 @@
 // source: https://georgerrmartin.com/notablog/?p=106
+// ignore_for_file: unnecessary_string_escapes, constant_identifier_names
+
 const scenario_1_html = """
 <!DOCTYPE html>
 <html lang="en-US">

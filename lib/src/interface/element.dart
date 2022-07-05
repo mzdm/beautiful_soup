@@ -48,7 +48,7 @@ abstract class IElement {
   /// Where `key` is an attribute name and value is the `value` of an attribute.
   LinkedHashMap<Object, String> get attributes;
 
-  set attributes(LinkedHashMap<Object, String> _attributes);
+  set attributes(LinkedHashMap<Object, String> attributes);
 
   /// The set of CSS classes applied to this element.
   ///
