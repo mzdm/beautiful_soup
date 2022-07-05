@@ -1,4 +1,4 @@
-## NEXT
+## 0.3.0
 
 - Added new **Modifying the Tree** methods: `newTag()`, `clear()`, `decompose()`, `wrap()`,
 `unwrap()`, `setter for .name (tag name)`.
