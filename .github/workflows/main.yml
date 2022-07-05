@@ -16,9 +16,9 @@ jobs:
       - name: Run tests
         run: dart test
       - name: Install test_coverage
-        run: pub global activate test_coverage
+        run: dart pub global activate test_coverage
       - name: Run test_coverage
-        run: pub global run test_coverage
+        run: dart pub global run test_coverage
       - name: Upload coverage to Codecov
         if: github.ref == 'refs/heads/master'
         uses: codecov/codecov-action@v2
